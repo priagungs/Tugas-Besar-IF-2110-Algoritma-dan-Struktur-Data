@@ -8,14 +8,12 @@
 #include "boolean.h"
 #include "player.h"
 
-#define MaxEl 100
 #define Nil 0
-/* N
-
-il adalah stack dengan elemen kosong . */
+#define MaxEl 100
+/* Nil adalah stack dengan elemen kosong . */
 /* Karena indeks dalam bhs C dimulai 0 maka tabel dg indeks 0 tidak dipakai */
 
-typedef Player infotype;
+typedef int infotype;
 typedef int address;   /* indeks tabel */
 
 /* Contoh deklarasi variabel bertype stack dengan ciri TOP : */
@@ -23,7 +21,7 @@ typedef int address;   /* indeks tabel */
 typedef struct {
 	infotype T[MaxEl+1]; /* tabel penyimpan elemen */
 	address TOP;  /* alamat TOP: elemen puncak */
-} StackPlayer;
+} Stack;
 /* Definisi stack S kosong : S.TOP = Nil */
 /* Elemen yang dipakai menyimpan nilai Stack T[1]..T[MaxEl] */
 /* Jika S adalah Stack maka akses elemen : */
@@ -36,26 +34,26 @@ typedef struct {
 
 /* ************ Prototype ************ */
 /* *** Konstruktor/Kreator *** */
-void CreateEmptyStackPlayer (StackPlayer *S);
+void CreateEmptyStackPlayer (Stack *S);
 /* I.S. sembarang; */
 /* F.S. Membuat sebuah stack S yang kosong berkapasitas MaxEl */
 /* jadi indeksnya antara 1.. MaxEl+1 karena 0 tidak dipakai */
 /* Ciri stack kosong : TOP bernilai Nil */
 
 /* ************ Predikat Untuk test keadaan KOLEKSI ************ */
-boolean IsEmptyStackPlayer (StackPlayer S);
+boolean IsEmptyStackPlayer (Stack S);
 /* Mengirim true jika Stack kosong: lihat definisi di atas */
-boolean IsFullStackPlayer (StackPlayer S);
+boolean IsFullStackPlayer (Stack S);
 /* Mengirim true jika tabel penampung nilai elemen stack penuh */
 
 /* ************ Menambahkan sebuah elemen ke Stack ************ */
-void PushPlayer (StackPlayer * S, infotype X);
+void PushPlayer (Stack * S, infotype X);
 /* Menambahkan X sebagai elemen Stack S. */
 /* I.S. S mungkin kosong, tabel penampung elemen stack TIDAK penuh */
 /* F.S. X menjadi TOP yang baru,TOP bertambah 1 */
 
 /* ************ Menghapus sebuah elemen Stack ************ */
-void PopPlayer (StackPlayer * S, infotype* X);
+void PopPlayer (Stack * S, infotype* X);
 /* Menghapus X dari Stack S. */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
