@@ -12,7 +12,7 @@ char Str[15];
 Player P1;
 Player P2;
 ListVil Villages;
-/*StackPlayer SP;*/
+StackPlayer SP;
 /*
 QueueP QP;
 */
@@ -47,9 +47,20 @@ void Move(PETA M,Player P){
 	GeserUnit(&)
 }
 
-/*
-void Undo()
-*/
+Player Undo(StackPlayer SP){
+	Player Temp;
+	Pop(&SP,&Temp);
+	return Temp;
+}
+
+void ClearStack(StackPlayer *SP){
+	infotype temp;
+
+	while(!IsEmpty(*SP)){
+		Pop(&SP,&temp);
+	}
+}
+
 
 /*boolean CheckKingAtTower(Player P,PETA P,int NB,int NK){
 
@@ -86,29 +97,36 @@ int main(){
 		scanf("%s",Str);
 		
 		if(!strcmp(Str,"MOVE")){
+			Push(&SP,Pl);
 			
 		}else if(!strcmp(Str,"UNDO")){
-			
+			if(!IsEmpty(SP)){
+				Pl = Undo(SP);
+			}else{
+				printf("You cannot undo!\n");
+			}
 		}else if(!strcmp(Str,"CHANGE_UNIT")){
 
 		}else if(!strcmp(Str,"NEXT_UNIT")){
 			Now = InfoUnit(NextUnit(FirstUnit(UnitList(P1))));
 		}else if(!strcmp(Str,"RECRUIT")){
-			
+			ClearStack(&SP);
 		}else if(!strcmp(Str,"ATTACK")){
-			
+			ClearStack(&SP);
 		}else if(!strcmp(Str,"MAP")){
-			
+			UpdatePETA(&P,P1,P2,Villages);
+			PrintPETA(P);
 		}else if(!strcmp(Str,"INFO")){
 			
 		}else if(!strcmp(Str,"END_TURN")){
-			
+			ClearStack(&SP);
 		}else if(!strcmp(Str,"SAVE")){
-			
+			ClearStack(&SP);
 		}else{
 			if(strcmp(Str,"EXIT")){
 				printf("No command found!\n");
 			}
 		}
 	}while(strcmp(Str,"EXIT"));
+	ClearStack(&SP);
 }
