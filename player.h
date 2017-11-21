@@ -40,4 +40,5 @@ void Add_Unit(Player *Pl, Unit U);
 void Del_Unit(Player *Pl, Unit U);
 void Add_Village (Player *Pl, Village V);
 void Del_Village (Player *Pl, Village V);
+void Next_Unit(Player Pl,int *nomor, Unit *Now);
 #endif

@@ -55,3 +55,24 @@ void Del_Village (Player *Pl, Village V){
 	Update_Income(Pl, -1*IncomeVil(V));
 	DelPVil(&VillageList(*Pl),V);
 }
+
+void Next_Unit(Player Pl,int *nomor, Unit *Now){
+	int NbUnit = 1;
+	addressUnit P = FirstUnit(UnitList(Pl));
+	while(NextUnit(P) != FirstUnit(UnitList(Pl))){
+		NbUnit ++;
+		P = NextUnit(P);
+	}
+	Unit U = SearchNomor(UnitList(Pl),*nomor);
+	while(Movement_Point(U) == 0 && !Kesempatan_Serangan(U)){
+		(*nomor) ++;
+		if(*nomor > NbUnit)
+		break;
+		U = SearchNomor(UnitList(Pl),*nomor);
+	}
+	if(*nomor > NbUnit)
+		printf("No more unit availlable.\n");
+	else{
+		*Now = U;
+	}
+}

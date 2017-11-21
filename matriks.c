@@ -12,35 +12,37 @@ void InitiateTowerCastle (PETA *M){
 
 /* Menginisiasi pemilik petak */
 	/* Untuk Player 1 */
-    KBP(*M,NKolEff(*M)-3,BrsMin+1) = 1;
-   	KBP(*M,NKolEff(*M)-2,BrsMin) = 1;
-    KBP(*M,NKolEff(*M)-2,BrsMin+1) = 1;
-    KBP(*M,NKolEff(*M)-2,BrsMin+2) = 1;    
-    KBP(*M,NKolEff(*M)-1,BrsMin+1) = 1;
+    KBP(*M,KolMin,NBrsEff(*M)-2) = 1;
+    KBP(*M,KolMin+1,NBrsEff(*M)-3) = 1;
+    KBP(*M,KolMin+1,NBrsEff(*M)-2) = 1;
+    KBP(*M,KolMin+1,NBrsEff(*M)-1) = 1;
+    KBP(*M,KolMin+2,NBrsEff(*M)-2) = 1;
     /* Untuk Player 2 */
-    KBP(*M,KolMin,NBrsEff(*M)-2) = 2;
-    KBP(*M,KolMin+1,NBrsEff(*M)-3) = 2;
-    KBP(*M,KolMin+1,NBrsEff(*M)-2) = 2;
-    KBP(*M,KolMin+1,NBrsEff(*M)-1) = 2;
-    KBP(*M,KolMin+2,NBrsEff(*M)-2) = 2;
+    KBP(*M,NKolEff(*M)-3,BrsMin+1) = 2;
+   	KBP(*M,NKolEff(*M)-2,BrsMin) = 2;
+    KBP(*M,NKolEff(*M)-2,BrsMin+1) = 2;
+    KBP(*M,NKolEff(*M)-2,BrsMin+2) = 2;    
+    KBP(*M,NKolEff(*M)-1,BrsMin+1) = 2;
 
 /* Memposisikan tower dan castle setiap pemain */
-	 /* Untuk Player 1 */
-    BP(*M,NKolEff(*M)-3,BrsMin+1) = 'C';
-   	BP(*M,NKolEff(*M)-2,BrsMin) = 'C';
-    BP(*M,NKolEff(*M)-2,BrsMin+1) = 'T';
-    BP(*M,NKolEff(*M)-2,BrsMin+2) = 'C';    
-    BP(*M,NKolEff(*M)-1,BrsMin+1) = 'C';
-    /* Untuk Player 2 */
+	 
+    /* Untuk Player 1 */
     BP(*M,KolMin,NBrsEff(*M)-2) = 'C';
     BP(*M,KolMin+1,NBrsEff(*M)-3) = 'C';
     BP(*M,KolMin+1,NBrsEff(*M)-2) = 'T';
     BP(*M,KolMin+1,NBrsEff(*M)-1) = 'C';
     BP(*M,KolMin+2,NBrsEff(*M)-2) = 'C';
+
+    /* Untuk Player 2 */
+    BP(*M,NKolEff(*M)-3,BrsMin+1) = 'C';
+   	BP(*M,NKolEff(*M)-2,BrsMin) = 'C';
+    BP(*M,NKolEff(*M)-2,BrsMin+1) = 'T';
+    BP(*M,NKolEff(*M)-2,BrsMin+2) = 'C';    
+    BP(*M,NKolEff(*M)-1,BrsMin+1) = 'C';
 }
 
 /* *** Konstruktor membentuk PETA *** */
-void MakePETA(int NB, int NK, PETA *P){
+void MakePETA(int NK, int NB, PETA *P){
 	NBrsEff(*P) = NB;
 	NKolEff(*P) = NK;
 
@@ -49,9 +51,9 @@ void MakePETA(int NB, int NK, PETA *P){
 	// int kepemilikanPetak = (0)Normal
 	// char unitPetak = (N)othing
 
-	for (int i = 0; i < NBrsEff(*P); ++i)
+	for (int j = 0; j < NBrsEff(*P); ++j)
 	{
-		for (int j = 0; j < NKolEff(*P); ++j)
+		for (int i = 0; i < NKolEff(*P); ++i)
 		{
 			BP(*P,i,j) = 'N';
 			KBP(*P,i,j) = 0;
@@ -217,40 +219,40 @@ void PrintPETA(PETA P){
 		for (int j = 0; j < NKolEff(P); ++j)
 		{
 			printf("* ");
-			if(KBP(P,i,j) == 0){
+			if(KBP(P,j,i) == 0){
 
-				if(BP(P,i,j) == 'N'){
+				if(BP(P,j,i) == 'N'){
 					printf(" ");
-				} else if (BP(P,i,j) == 'T'){
+				} else if (BP(P,j,i) == 'T'){
 					printf("T");
-				} else if (BP(P,i,j) == 'C'){
+				} else if (BP(P,j,i) == 'C'){
 					printf("C");
-				} else if (BP(P,i,j) == 'V'){
+				} else if (BP(P,j,i) == 'V'){
 					printf("V");
 
 				}
 
-			} else if (KBP(P,i,j) == 1){
+			} else if (KBP(P,j,i) == 1){
 
-				if(BP(P,i,j) == 'N'){
+				if(BP(P,j,i) == 'N'){
 					printf(" ");
-				} else if (BP(P,i,j) == 'T'){
+				} else if (BP(P,j,i) == 'T'){
 					print_green('T');
-				} else if (BP(P,i,j) == 'C'){
+				} else if (BP(P,j,i) == 'C'){
 					print_green('C');
-				} else if (BP(P,i,j) == 'V'){
+				} else if (BP(P,j,i) == 'V'){
 					print_green('V');
 				}
 
 			} else {
 
-				if(BP(P,i,j) == 'N'){
+				if(BP(P,j,i) == 'N'){
 					printf(" ");
-				} else if (BP(P,i,j) == 'T'){
+				} else if (BP(P,j,i) == 'T'){
 					print_red('T');
-				} else if (BP(P,i,j) == 'C'){
+				} else if (BP(P,j,i) == 'C'){
 					print_red('C');
-				} else if (BP(P,i,j) == 'V'){
+				} else if (BP(P,j,i) == 'V'){
 					print_red('V');
 				}
 
@@ -271,34 +273,34 @@ void PrintPETA(PETA P){
 		for (int j = 0; j < NKolEff(P); ++j)
 		{
 			printf("* ");
-			if(KUP(P,i,j) == 0){
+			if(KUP(P,j,i) == 0){
 
-				if (UP(P,i,j) == 'K') {
+				if (UP(P,j,i) == 'K') {
 					printf("K");
-				}else if (UP(P,i,j) == 'A'){
+				}else if (UP(P,j,i) == 'A'){
 					printf("A");
-				}else if (UP(P,i,j) == 'S'){
+				}else if (UP(P,j,i) == 'S'){
 					printf("S");
-				}else if (UP(P,i,j) == 'W'){
+				}else if (UP(P,j,i) == 'W'){
 					printf("W");
-				}else if(UP(P,i,j) == '#'){
+				}else if(UP(P,j,i) == '#'){
           printf("#");
         }else {
 					printf(" ");
 				}
 
 
-			} else if (KUP(P,i,j) == 1){
+			} else if (KUP(P,j,i) == 1){
 
-				if (UP(P,i,j) == 'K') {
+				if (UP(P,j,i) == 'K') {
 					print_green('K');
-				}else if (UP(P,i,j) == 'A'){
+				}else if (UP(P,j,i) == 'A'){
 					print_green('A');
-				}else if (UP(P,i,j) == 'S'){
+				}else if (UP(P,j,i) == 'S'){
 					print_green('S');
-				}else if (UP(P,i,j) == 'W'){
+				}else if (UP(P,j,i) == 'W'){
 					print_green('W');
-				}else if(UP(P,i,j) == '#'){
+				}else if(UP(P,j,i) == '#'){
           printf("#");
         }else {
 					print_green(' ');
@@ -306,15 +308,15 @@ void PrintPETA(PETA P){
 
 			} else {
 
-				if (UP(P,i,j) == 'K') {
+				if (UP(P,j,i) == 'K') {
 					print_red('K');
-				}else if (UP(P,i,j) == 'A'){
+				}else if (UP(P,j,i) == 'A'){
 					print_red('A');
-				}else if (UP(P,i,j) == 'S'){
+				}else if (UP(P,j,i) == 'S'){
 					print_red('S');
-				}else if (UP(P,i,j) == 'W'){
+				}else if (UP(P,j,i) == 'W'){
 					print_red('W');
-				}else if(UP(P,i,j) == '#'){
+				}else if(UP(P,j,i) == '#'){
           printf("#");
         }else {
 					print_red(' ');

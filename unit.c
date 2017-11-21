@@ -19,7 +19,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Harga_Unit(U) = 10;
     UpkeepUnit(U) = 0;
     Health(U) = Max_Health(U);
-    Movement_Point(U) = Max_Movement_Point(U);
+    Movement_Point(U) = 0;
     Tipe_Serangan(U) = "Melee";
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
@@ -33,7 +33,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Harga_Unit(U) = 30;
     UpkeepUnit(U) = 5;
     Health(U) = Max_Health(U);
-    Movement_Point(U) = Max_Movement_Point(U);
+    Movement_Point(U) = 0;
     Tipe_Serangan(U) = "Ranged";
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
@@ -47,7 +47,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Harga_Unit(U) = 30;
     UpkeepUnit(U) = 10;
     Health(U) = Max_Health(U);
-    Movement_Point(U) = Max_Movement_Point(U);
+    Movement_Point(U) = 0;
     Tipe_Serangan(U) = "Melee";
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
@@ -60,7 +60,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Harga_Unit(U) = 50;
     UpkeepUnit(U) = 20;
     Health(U) = Max_Health(U);
-    Movement_Point(U) = Max_Movement_Point(U);
+    Movement_Point(U) = 0;
     Tipe_Serangan(U) = "Melee";
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
