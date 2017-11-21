@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // PROTOTIPE PRIMITIF
 Unit CreateUnit(char* jenis, POINT Lokasi)
@@ -87,6 +88,7 @@ void Attack(Unit *U1, Unit *U2)
 // Prekondisi, jarak U1 dan U2 harus sudah memungkinkan untuk attack
 // U1 menyerang U2, tipe serangan diperhatikan
 {
+  srand(time(NULL));   // should only be called once
   const int prob = 70; //U1 will hit U2 if probAttack more than prob
   if(!Kesempatan_Serangan(*U1)){
     printf("You don't have a chance to attack anyone!\n");
@@ -114,8 +116,7 @@ void Attack(Unit *U1, Unit *U2)
     }
 
     // retaliates
-    char* temp = Jenis_Unit(*U2);
-    if(!IsUnitDead(*U2) && ((Jenis_Unit(*U1) == Jenis_Unit(*U2) ||  strcmp(temp,"King") )) ) {
+    if(!IsUnitDead(*U2) && (Jenis_Unit(*U1) == Jenis_Unit(*U2) || Jenis_Unit(*U2) == "King")){
       printf("Enemy's %s retaliates\n", Jenis_Unit(*U2));
       int probRetaliates = rand()%100; //generate Retaliates
       if(probRetaliates <= prob){
@@ -145,18 +146,17 @@ boolean IsUnitDead(Unit U)
 
 boolean CanUnitMoveTo(Unit U, POINT P)
 // true jika unit U dapat bergerak ke P
-// prekondisi pada point P tidak ada unit apapun
 {
-  if(Absis(P) - Absis(Lokasi_Unit(U)) == Ordinat(P) - Ordinat(Lokasi_Unit(U))){
-    return Movement_Point(U) >= abs(Absis(P)-Absis(Lokasi_Unit(U))) + abs(Ordinat(P)-Ordinat(Lokasi_Unit(U)));
+  // combine noObstacle with movement_point provision
+  // if(Absis(P) - Absis(Lokasi_Unit(U)) == Ordinat(P) - Ordinat(Lokasi_Unit(U))){
+  //   // return Movement_Point(U) >= abs(Absis(P)-Absis(Lokasi_Unit(U))) + abs(Ordinat(P)-Ordinat(Lokasi_Unit(U)));
+  // }
+  // else{
+  if(Absis(P) != Absis(Lokasi_Unit(U)) && Ordinat(P)!=Ordinat(Lokasi_Unit(U))){
+    return false;
   }
-  else{
-    if(Absis(P) != Absis(Lokasi_Unit(U)) && Ordinat(P)!=Ordinat(Lokasi_Unit(U))){
-      return false;
-    }
-    else {
-      return Movement_Point(U) >= Panjang(Lokasi_Unit(U), P);
-    }
+  else {
+    return Movement_Point(U) >= Panjang(Lokasi_Unit(U), P);
   }
 }
 
@@ -165,10 +165,23 @@ boolean CanUnitAttack(Unit U1, Unit U2)
 {
   POINT P1 = Lokasi_Unit(U1), P2 = Lokasi_Unit(U2);
 
-  if((Absis(P1) != Absis(P2) && Ordinat(P1) != Ordinat(P2) )|| !Kesempatan_Serangan(U1)){
+  if(Absis(P1) != Absis(P2) && Ordinat(P1) != Ordinat(P2) || !Kesempatan_Serangan(U1)){
     return false;
   }
   else {
     return true;
+  }
+}
+
+void PrintUnit( Unit U){
+  printf("Position : (%d,%d)\n",Absis(Lokasi_Unit(U)),Ordinat(Lokasi_Unit(U)));
+  printf("Health : %d/%d\n", Health(U), Max_Health(U));
+  printf("Damage : %d\n",Attack_Damage(U));
+  printf("Movement Point: %d\n",Movement_Point(U));
+  printf("Chance of Attack : ");
+  if(Kesempatan_Serangan(U)){
+    printf("Yes\n");
+  }else{
+    printf("No\n");
   }
 }

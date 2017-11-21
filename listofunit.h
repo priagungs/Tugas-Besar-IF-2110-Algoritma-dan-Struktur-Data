@@ -13,7 +13,7 @@
 #define Nil NULL
 
 typedef struct tElmtlistUnit *addressUnit;
-typedef struct tElmtlistUnit { 
+typedef struct tElmtlistUnit {
 	Unit info;
 	addressUnit next;
 } ElmtListUnit;
@@ -107,4 +107,5 @@ void DelKoordinatUnit (ListUnit *L, POINT Koordinat);
 /* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
 void PrintListUnit(ListUnit L);
+Unit SearchNomor( ListUnit L, int nomor);
 #endif

@@ -12,31 +12,31 @@ void InitiateTowerCastle (PETA *M){
 
 /* Menginisiasi pemilik petak */
 	/* Untuk Player 1 */
-    KBP(*M,NKolEff(*M)-3,BrsMin+1) = 1;
-   	KBP(*M,NKolEff(*M)-2,BrsMin) = 1;
-    KBP(*M,NKolEff(*M)-2,BrsMin+1) = 1;
-    KBP(*M,NKolEff(*M)-2,BrsMin+2) = 1;    
-    KBP(*M,NKolEff(*M)-1,BrsMin+1) = 1;
+    KBP(*M,NBrsEff(*M)-3,KolMin+1) = 1;
+   	KBP(*M,NBrsEff(*M)-2,KolMin) = 1;
+    KBP(*M,NBrsEff(*M)-2,KolMin+1) = 1;
+    KBP(*M,NBrsEff(*M)-2,KolMin+2) = 1;
+    KBP(*M,NBrsEff(*M)-1,KolMin+1) = 1;
     /* Untuk Player 2 */
-    KBP(*M,KolMin,NBrsEff(*M)-2) = 2;
-    KBP(*M,KolMin+1,NBrsEff(*M)-3) = 2;
-    KBP(*M,KolMin+1,NBrsEff(*M)-2) = 2;
-    KBP(*M,KolMin+1,NBrsEff(*M)-1) = 2;
-    KBP(*M,KolMin+2,NBrsEff(*M)-2) = 2;
+    KBP(*M,BrsMin,NKolEff(*M)-2) = 2;
+    KBP(*M,BrsMin+1,NKolEff(*M)-3) = 2;
+    KBP(*M,BrsMin+1,NKolEff(*M)-2) = 2;
+    KBP(*M,BrsMin+1,NKolEff(*M)-1) = 2;
+    KBP(*M,BrsMin+2,NKolEff(*M)-2) = 2;
 
 /* Memposisikan tower dan castle setiap pemain */
 	 /* Untuk Player 1 */
-    BP(*M,NKolEff(*M)-3,BrsMin+1) = 'C';
-   	BP(*M,NKolEff(*M)-2,BrsMin) = 'C';
-    BP(*M,NKolEff(*M)-2,BrsMin+1) = 'T';
-    BP(*M,NKolEff(*M)-2,BrsMin+2) = 'C';    
-    BP(*M,NKolEff(*M)-1,BrsMin+1) = 'C';
+    BP(*M,NBrsEff(*M)-3,KolMin+1) = 'C';
+   	BP(*M,NBrsEff(*M)-2,KolMin) = 'C';
+    BP(*M,NBrsEff(*M)-2,KolMin+1) = 'T';
+    BP(*M,NBrsEff(*M)-2,KolMin+2) = 'C';
+    BP(*M,NBrsEff(*M)-1,KolMin+1) = 'C';
     /* Untuk Player 2 */
-    BP(*M,KolMin,NBrsEff(*M)-2) = 'C';
-    BP(*M,KolMin+1,NBrsEff(*M)-3) = 'C';
-    BP(*M,KolMin+1,NBrsEff(*M)-2) = 'T';
-    BP(*M,KolMin+1,NBrsEff(*M)-1) = 'C';
-    BP(*M,KolMin+2,NBrsEff(*M)-2) = 'C';
+    BP(*M,BrsMin,NKolEff(*M)-2) = 'C';
+    BP(*M,BrsMin+1,NKolEff(*M)-3) = 'C';
+    BP(*M,BrsMin+1,NKolEff(*M)-2) = 'T';
+    BP(*M,BrsMin+1,NKolEff(*M)-1) = 'C';
+    BP(*M,BrsMin+2,NKolEff(*M)-2) = 'C';
 }
 
 /* *** Konstruktor membentuk PETA *** */
@@ -196,7 +196,7 @@ void PrintPETA(PETA P){
 		} else {
 			printf(" %d ", i);
 		}
-		
+
 	}
 	printf(" \n");
 
@@ -267,7 +267,7 @@ void PrintPETA(PETA P){
 		} else {
 			printf(" %d", i);
 		}
-		
+
 		for (int j = 0; j < NKolEff(P); ++j)
 		{
 			printf("* ");
@@ -281,7 +281,9 @@ void PrintPETA(PETA P){
 					printf("S");
 				}else if (UP(P,i,j) == 'W'){
 					printf("W");
-				}else {
+				}else if(UP(P,i,j) == '#'){
+          printf("#");
+        }else {
 					printf(" ");
 				}
 
@@ -296,7 +298,9 @@ void PrintPETA(PETA P){
 					print_green('S');
 				}else if (UP(P,i,j) == 'W'){
 					print_green('W');
-				}else {
+				}else if(UP(P,i,j) == '#'){
+          printf("#");
+        }else {
 					print_green(' ');
 				}
 
@@ -310,7 +314,9 @@ void PrintPETA(PETA P){
 					print_red('S');
 				}else if (UP(P,i,j) == 'W'){
 					print_red('W');
-				}else {
+				}else if(UP(P,i,j) == '#'){
+          printf("#");
+        }else {
 					print_red(' ');
 				}
 
@@ -324,7 +330,7 @@ void PrintPETA(PETA P){
 		for (int j = 0; j < NKolEff(P); ++j)
 		{
 			printf("*   ");
-			
+
 		}
 		printf("*\n");
 	}
@@ -355,6 +361,75 @@ void RandomVillage (ListVil *L, int NVillage, int x, int y, PETA *P)
 		(*P).Mem[i][j].bangunanPetak='V';
 		uang = rand() % 50;
 		MakeVillage(&Vil,i,j,uang);
-		InsVFirstVil (L, Vil);	
+		InsVFirstVil (L, Vil);
 	}
+}
+
+boolean NoObstacle(Unit U, POINT P, PETA M){
+	//horizontal, vertical, and diagonal Checking
+  boolean noObstacle = true;
+
+  // horizontal
+  if(Ordinat(P) == Ordinat(Lokasi_Unit(U))){
+    if(Absis(P) > Absis(Lokasi_Unit(U))){
+      for(int i=Absis(Lokasi_Unit(U)); i <= Absis(P); i++){ //row checking
+        if(KUP(M, i, Ordinat(P)) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,i,Ordinat(P)) != 0){
+          printf("%d ", KUP(M,i,Ordinat(P)));
+          printf("%d %d\n", i, Ordinat(P));
+          return false;
+        }
+      }
+    }
+    else if(Absis(P) < Absis(Lokasi_Unit(U))){
+      for(int i=Absis(Lokasi_Unit(U)); i >= Absis(P); i--){ //row checking
+        if(KUP(M, i, Ordinat(P)) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,i,Ordinat(P)) != 0){
+          return false;
+        }
+      }
+    }
+  }
+  // vertical
+  else if(Absis(P) == Absis(Lokasi_Unit(U))){
+    if(Ordinat(P) > Ordinat(Lokasi_Unit(U))){
+      for(int i=Ordinat(Lokasi_Unit(U))+1; i <= Ordinat(P); i++){ //row checking
+        if(KUP(M, Absis(P), i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,Absis(P),i) != 0){
+          return false;
+        }
+      }
+    }
+    else if(Ordinat(P) < Ordinat(Lokasi_Unit(U))){
+      for(int i=Ordinat(Lokasi_Unit(U))-1; i >= Ordinat(P); i--){ //row checking
+        if(KUP(M, Absis(P), i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,Absis(P),i) != 0){
+          return false;
+        }
+      }
+    }
+  }
+
+  // // diagonal
+  // else if((Absis(P) - Absis(Lokasi_Unit(U))) > 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) > 0){
+  //   for(int i = 1; i < abs(Ordinat(P)-Ordinat(Lokasi_Unit(U))); i++){
+  //     if((Absis(P) - Absis(Lokasi_Unit(U))) > 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) > 0){
+  //       if(KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))+i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))+i) != 0){
+  //         return false;
+  //       }
+  //     }
+  //     else if((Absis(P) - Absis(Lokasi_Unit(U))) > 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) < 0){
+  //       if(KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))-i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))-i) != 0){
+  //         return false;
+  //       }
+  //     }
+  //     else if((Absis(P) - Absis(Lokasi_Unit(U))) < 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) > 0){
+  //       if(KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))+i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))+i) != 0){
+  //         return false;
+  //       }
+  //     }
+  //     else if((Absis(P) - Absis(Lokasi_Unit(U))) < 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) < 0){
+  //       if(KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))-i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))-i) != 0){
+  //         return false;
+  //       }
+  //     }
+  //   }
+  // }
+  return noObstacle;
 }

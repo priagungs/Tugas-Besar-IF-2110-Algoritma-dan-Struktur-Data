@@ -74,17 +74,15 @@ int Kuadran (POINT P)
 /* Prekondisi : P bukan titik origin, */
 /*              dan P tidak terletak di salah satu sumbu */
 {
-	int hasil;
 	if((Absis(P)>0) && (Ordinat(P)>0)){
-		hasil = 1;
+		return 1;
 	} else if((Absis(P)>0) && (Ordinat(P)<0)){
-		hasil = 4;
+		return 4;
 	} else if((Absis(P)<0) && (Ordinat(P)>0)){
-		hasil = 2;
+		return 2;
 	} else if((Absis(P)<0) && (Ordinat(P)<0)){
-		hasil = 3;
+		return 3;
 	}
-	return hasil;
 }
 
 /* *** KELOMPOK OPERASI LAIN TERHADAP TYPE *** */                           
