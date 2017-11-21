@@ -13,6 +13,7 @@ Player P1;
 Player P2;
 Player *CurrentPlayer;
 ListVil Villages;
+StackPlayer SP;
 int turn=1;
 
 PETA P;
@@ -43,11 +44,6 @@ int main(){
 	MakePETA(NK,NB,&P);
 	Unit Now = CreateUnit("King",MakePOINT(KolMin+1,NB-2));
 	InsUnitFirst(&UnitList(P1),Now);
-	printf("%d\n", Movement_Point(Now));
-	printf("%s\n", Tipe_Serangan(InfoUnit(FirstUnit(UnitList(P1)))));
-	printf("%d\n", Max_Movement_Point(InfoUnit(FirstUnit(UnitList(P1)))));
-	printf("%d\n", Movement_Point(InfoUnit(FirstUnit(UnitList(P1)))));
-
 
 	Now = CreateUnit("King",MakePOINT(NK-2,BrsMin+1));
 	InsUnitFirst(&UnitList(P2),Now);
@@ -59,17 +55,33 @@ int main(){
 	UpdatePETA(&P,P1,P2,Villages);
 	PrintPETA(P);
 	IndeksUnit = 1;
-	DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
-	printf("%d\n", Movement_Point(Now));
 	do{
 		PrintPlayerStatus(*CurrentPlayer,Now);
 		printf("Your Input: ");
 		scanf("%s",Str);
 
 		if(!strcmp(Str,"MOVE")){
+			//pop current unit from list of unit
+			if(!strcmp(Jenis_Unit(Now), "King")){
+				DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
+			}
+			else {
+				DelKoordinatUnit(&UnitList(*CurrentPlayer), Lokasi_Unit(Now), &Now);
+			}
+
 			Push(&SP,*CurrentPlayer);
 			Move(P, &Now);
-			InsUnitFirst(&UnitList(*CurrentPlayer), Now);
+
+			//push moved current unit to list of unit
+			if(!strcmp(Jenis_Unit(Now), "King")){
+				InsUnitFirst(&UnitList(*CurrentPlayer), Now);
+			}
+			else {
+				InsUnitLast(&UnitList(*CurrentPlayer), Now);
+			}
+
+			//update map
+			UpdatePETA(&P,P1,P2,Villages);
 		}else if(!strcmp(Str,"UNDO")){
 			if(!IsEmpty(SP)){
 				*CurrentPlayer = Undo(SP);
@@ -104,7 +116,7 @@ int main(){
 				turn++;
 			}
 			IndeksUnit = 1;
-			DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
+			// DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
 		}else if(!strcmp(Str,"SAVE")){
 			ClearStack(&SP);
 		}else{
@@ -324,6 +336,6 @@ void ClearStack(StackPlayer *SP){
 	infotype temp;
 
 	while(!IsEmpty(*SP)){
-		Pop(&SP,&temp);
+		Pop(SP,&temp);
 	}
 }

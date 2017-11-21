@@ -211,7 +211,7 @@ void DelAfterUnit (ListUnit *L, addressUnit *Pdel, addressUnit Prec){
 	NextUnit(Prec) = NextUnit(*Pdel);
 	NextUnit(*Pdel) = Nil;
 }
-void DelKoordinatUnit (ListUnit *L, POINT Koordinat){
+void DelKoordinatUnit (ListUnit *L, POINT Koordinat, Unit *X){
 /* I.S. Sembarang */
 /* F.S. Jika ada elemen list beraddressUnit P, dengan Info(P)=X  */
 /* Maka P dihapus dari list dan di-dealokasi */
@@ -222,12 +222,14 @@ void DelKoordinatUnit (ListUnit *L, POINT Koordinat){
 		P = SearchKoordinatUnit(*L,Koordinat);
 		if (P != Nil) {
 			if (P == FirstUnit(*L)) {
+				*X = InfoUnit(P);
 				DelFirstUnit(L,&P);
 			} else {
 				Prec = FirstUnit(*L);
 				while (NextUnit(Prec) != P) {
 					Prec = NextUnit(Prec);
 				}
+				*X = InfoUnit(NextUnit(Prec));
 				DelAfterUnit(L,&P,Prec);
 				DealokasiUnit(P);
 			}

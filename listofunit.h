@@ -100,7 +100,7 @@ void DelAfterUnit (ListUnit *L, addressUnit *Pdel, addressUnit Prec);
 /* I.S. List tidak kosong. Prec adalah anggota list  */
 /* F.S. Menghapus Next(Prec): */
 /*      Pdel adalah alamat elemen list yang dihapus  */
-void DelKoordinatUnit (ListUnit *L, POINT Koordinat);
+void DelKoordinatUnit (ListUnit *L, POINT Koordinat, Unit *X);
 /* I.S. Sembarang */
 /* F.S. Jika ada elemen list beraddressUnit P, dengan Info(P)=X  */
 /* Maka P dihapus dari list dan di-dealokasi */

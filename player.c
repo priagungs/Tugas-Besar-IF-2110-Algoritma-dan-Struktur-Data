@@ -41,7 +41,8 @@ void Add_Unit(Player *Pl, Unit U){
 
 void Del_Unit(Player *Pl, Unit U){
 // menghapus U pada list of unit di player
-	DelKoordinatUnit (&UnitList(*Pl), Lokasi_Unit(U));
+	Unit temp;
+	DelKoordinatUnit (&UnitList(*Pl), Lokasi_Unit(U), &temp);
 }
 
 void Add_Village (Player *Pl, Village V){
