@@ -114,7 +114,8 @@ void Attack(Unit *U1, Unit *U2)
     }
 
     // retaliates
-    if(!IsUnitDead(*U2) && (Jenis_Unit(*U1) == Jenis_Unit(*U2) || Jenis_Unit(*U2) == "King")){
+    char* temp = Jenis_Unit(*U2);
+    if(!IsUnitDead(*U2) && ((Jenis_Unit(*U1) == Jenis_Unit(*U2) ||  strcmp(temp,"King") )) ) {
       printf("Enemy's %s retaliates\n", Jenis_Unit(*U2));
       int probRetaliates = rand()%100; //generate Retaliates
       if(probRetaliates <= prob){
@@ -154,7 +155,7 @@ boolean CanUnitMoveTo(Unit U, POINT P)
       return false;
     }
     else {
-      //return Movement_Point(U) >= Panjang(Lokasi_Unit(U), P);
+      return Movement_Point(U) >= Panjang(Lokasi_Unit(U), P);
     }
   }
 }
@@ -164,7 +165,7 @@ boolean CanUnitAttack(Unit U1, Unit U2)
 {
   POINT P1 = Lokasi_Unit(U1), P2 = Lokasi_Unit(U2);
 
-  if(Absis(P1) != Absis(P2) && Ordinat(P1) != Ordinat(P2) || !Kesempatan_Serangan(U1)){
+  if((Absis(P1) != Absis(P2) && Ordinat(P1) != Ordinat(P2) )|| !Kesempatan_Serangan(U1)){
     return false;
   }
   else {

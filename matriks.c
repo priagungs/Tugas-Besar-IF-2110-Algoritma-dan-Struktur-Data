@@ -12,31 +12,31 @@ void InitiateTowerCastle (PETA *M){
 
 /* Menginisiasi pemilik petak */
 	/* Untuk Player 1 */
-    KBP(*M,NBrsEff(*M)-3,KolMin+1) = 1;
-   	KBP(*M,NBrsEff(*M)-2,KolMin) = 1;
-    KBP(*M,NBrsEff(*M)-2,KolMin+1) = 1;
-    KBP(*M,NBrsEff(*M)-2,KolMin+2) = 1;    
-    KBP(*M,NBrsEff(*M)-1,KolMin+1) = 1;
+    KBP(*M,NKolEff(*M)-3,BrsMin+1) = 1;
+   	KBP(*M,NKolEff(*M)-2,BrsMin) = 1;
+    KBP(*M,NKolEff(*M)-2,BrsMin+1) = 1;
+    KBP(*M,NKolEff(*M)-2,BrsMin+2) = 1;    
+    KBP(*M,NKolEff(*M)-1,BrsMin+1) = 1;
     /* Untuk Player 2 */
-    KBP(*M,BrsMin,NKolEff(*M)-2) = 2;
-    KBP(*M,BrsMin+1,NKolEff(*M)-3) = 2;
-    KBP(*M,BrsMin+1,NKolEff(*M)-2) = 2;
-    KBP(*M,BrsMin+1,NKolEff(*M)-1) = 2;
-    KBP(*M,BrsMin+2,NKolEff(*M)-2) = 2;
+    KBP(*M,KolMin,NBrsEff(*M)-2) = 2;
+    KBP(*M,KolMin+1,NBrsEff(*M)-3) = 2;
+    KBP(*M,KolMin+1,NBrsEff(*M)-2) = 2;
+    KBP(*M,KolMin+1,NBrsEff(*M)-1) = 2;
+    KBP(*M,KolMin+2,NBrsEff(*M)-2) = 2;
 
 /* Memposisikan tower dan castle setiap pemain */
 	 /* Untuk Player 1 */
-    BP(*M,NBrsEff(*M)-3,KolMin+1) = 'C';
-   	BP(*M,NBrsEff(*M)-2,KolMin) = 'C';
-    BP(*M,NBrsEff(*M)-2,KolMin+1) = 'T';
-    BP(*M,NBrsEff(*M)-2,KolMin+2) = 'C';    
-    BP(*M,NBrsEff(*M)-1,KolMin+1) = 'C';
+    BP(*M,NKolEff(*M)-3,BrsMin+1) = 'C';
+   	BP(*M,NKolEff(*M)-2,BrsMin) = 'C';
+    BP(*M,NKolEff(*M)-2,BrsMin+1) = 'T';
+    BP(*M,NKolEff(*M)-2,BrsMin+2) = 'C';    
+    BP(*M,NKolEff(*M)-1,BrsMin+1) = 'C';
     /* Untuk Player 2 */
-    BP(*M,BrsMin,NKolEff(*M)-2) = 'C';
-    BP(*M,BrsMin+1,NKolEff(*M)-3) = 'C';
-    BP(*M,BrsMin+1,NKolEff(*M)-2) = 'T';
-    BP(*M,BrsMin+1,NKolEff(*M)-1) = 'C';
-    BP(*M,BrsMin+2,NKolEff(*M)-2) = 'C';
+    BP(*M,KolMin,NBrsEff(*M)-2) = 'C';
+    BP(*M,KolMin+1,NBrsEff(*M)-3) = 'C';
+    BP(*M,KolMin+1,NBrsEff(*M)-2) = 'T';
+    BP(*M,KolMin+1,NBrsEff(*M)-1) = 'C';
+    BP(*M,KolMin+2,NBrsEff(*M)-2) = 'C';
 }
 
 /* *** Konstruktor membentuk PETA *** */
