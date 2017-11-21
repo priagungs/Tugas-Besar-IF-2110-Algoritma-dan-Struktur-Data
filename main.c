@@ -25,6 +25,9 @@ void PrintPlayerStatus(Player P,Unit U);
 
 void Move(PETA M, Unit* CurrentUnit);
 
+Player Undo(StackPlayer SP);
+
+void ClearStack(StackPlayer *SP);
 
 int main(){
 	Make_Player(&P1,1);
@@ -64,18 +67,25 @@ int main(){
 		scanf("%s",Str);
 
 		if(!strcmp(Str,"MOVE")){
+			Push(&SP,*CurrentPlayer);
 			Move(P, &Now);
 			InsUnitFirst(&UnitList(*CurrentPlayer), Now);
 		}else if(!strcmp(Str,"UNDO")){
-
+			if(!IsEmpty(SP)){
+				*CurrentPlayer = Undo(SP);
+			}else{
+				printf("You cannot undo!\n");
+			}
 		}else if(!strcmp(Str,"CHANGE_UNIT")){
 
 		}else if(!strcmp(Str,"NEXT_UNIT")){
 			PrintListUnit(UnitList(*CurrentPlayer));
 			Next_Unit(*CurrentPlayer, &IndeksUnit, &Now);
 		}else if(!strcmp(Str,"RECRUIT")){
+			ClearStack(&SP);
 			RekrutUnit();
 		}else if(!strcmp(Str,"ATTACK")){
+			ClearStack(&SP);
 
 		}else if(!strcmp(Str,"MAP")){
 			UpdatePETA(&P,P1,P2,Villages);
@@ -85,6 +95,7 @@ int main(){
 
 
 		}else if(!strcmp(Str,"END_TURN")){
+			ClearStack(&SP);
 			if(turn%2){
 				CurrentPlayer = &P2;
 				turn++;
@@ -95,7 +106,7 @@ int main(){
 			IndeksUnit = 1;
 			DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
 		}else if(!strcmp(Str,"SAVE")){
-
+			ClearStack(&SP);
 		}else{
 			if(strcmp(Str,"EXIT")){
 				printf("No command found!\n");
@@ -103,6 +114,7 @@ int main(){
 		}
 
 	}while(strcmp(Str,"EXIT"));
+	ClearStack(&SP);
 }
 
 void RekrutUnit(void){
@@ -299,5 +311,19 @@ void PrintPlayerStatus(Player PlayerTemp,Unit U){
 		printf("Yes\n");
 	}else{
 		printf("No\n");
+	}
+}
+
+Player Undo(StackPlayer SP){
+	Player Temp;
+	Pop(&SP,&Temp);
+	return Temp;
+}
+
+void ClearStack(StackPlayer *SP){
+	infotype temp;
+
+	while(!IsEmpty(*SP)){
+		Pop(&SP,&temp);
 	}
 }
