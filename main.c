@@ -1,5 +1,5 @@
 /*#include "jam.h"*/
-/*#include "stackofplayer.h"*/
+#include "stackofplayer.h"
 #include "listvillage.h"
 #include "matriks.h"
 #include "player.h"
