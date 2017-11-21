@@ -30,6 +30,8 @@ Player Undo(StackPlayer SP);
 
 void ClearStack(StackPlayer *SP);
 
+// void Attack(Unit* Now, Player* Enemy);
+
 int main(){
 	Make_Player(&P1,1);
 	Make_Player(&P2,2);
@@ -72,6 +74,32 @@ int main(){
 			Push(&SP,*CurrentPlayer);
 			Move(P, &Now);
 
+			if(BP(P, Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 'V'){
+				if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 0){
+					Movement_Point(Now) = 0;
+					addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
+					Add_Village(CurrentPlayer, InfoVillage(V));
+				}
+				else{
+					if(CurrentPlayer == &P1){
+						if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 2){
+							Movement_Point(Now) = 0;
+							addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
+							Add_Village(CurrentPlayer, InfoVillage(V));
+							Del_Village(&P2, InfoVillage(V));
+						}
+					}
+					else if (CurrentPlayer == &P2){
+						if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 1){
+							Movement_Point(Now) = 0;
+							addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
+							Add_Village(CurrentPlayer, InfoVillage(V));
+							Del_Village(&P1, InfoVillage(V));
+						}
+					}
+				}
+			}
+
 			//push moved current unit to list of unit
 			if(!strcmp(Jenis_Unit(Now), "King")){
 				InsUnitFirst(&UnitList(*CurrentPlayer), Now);
@@ -98,6 +126,31 @@ int main(){
 			RekrutUnit();
 		}else if(!strcmp(Str,"ATTACK")){
 			ClearStack(&SP);
+			// //pop current unit from list of unit
+			// if(!strcmp(Jenis_Unit(Now), "King")){
+			// 	DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
+			// }
+			// else {
+			// 	DelKoordinatUnit(&UnitList(*CurrentPlayer), Lokasi_Unit(Now), &Now);
+			// }
+            //
+			// if(CurrentPlayer == &P1){
+			// 	Attack(&Now, &P2);
+            //
+			// }
+			// else {
+			// 	Attack(&Now, &P1);
+			// }
+            //
+			// //push moved current unit to list of unit
+			// if(Health(Now) != 0){
+			// 	if(!strcmp(Jenis_Unit(Now), "King")){
+			// 		InsUnitFirst(&UnitList(*CurrentPlayer), Now);
+			// 	}
+			// 	else {
+			// 		InsUnitLast(&UnitList(*CurrentPlayer), Now);
+			// 	}
+			// }
 
 		}else if(!strcmp(Str,"MAP")){
 			UpdatePETA(&P,P1,P2,Villages);
@@ -110,9 +163,13 @@ int main(){
 			ClearStack(&SP);
 			if(turn%2){
 				CurrentPlayer = &P2;
+				ResetMovementPoint(&UnitList(*CurrentPlayer));
+				// Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer));
 				turn++;
 			} else {
 				CurrentPlayer = &P1;
+				ResetMovementPoint(&UnitList(*CurrentPlayer));
+				// Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer));
 				turn++;
 			}
 			IndeksUnit = 1;
@@ -339,3 +396,43 @@ void ClearStack(StackPlayer *SP){
 		Pop(SP,&temp);
 	}
 }
+
+// void Attack(Unit* Now, Player* Enemy){
+// 	addressUnit P = ListUnit(*Enemy);
+// 	addressUnit NearEnemyUnit[5];
+// 	int N=0;
+// 	while(addressUnit != Nil){
+// 		if(Panjang(Lokasi_Unit(InfoUnit(P)), Lokasi_Unit(*Now)) == 1){
+// 			N++;
+// 			NearEnemyUnit[N] = P;
+// 		}
+// 	}
+//
+// 	// print enemy unit that ready to be attacked
+// 	printf("Please select enemy you want to attack : \n");
+// 	for(int i=1; i<=N; i++){
+// 		if(!strcmp(Tipe_Serangan(InfoUnit(NearEnemyUnit[i])), Tipe_Serangan(*Now))){
+// 			printf("%d. %s (%d,%d) | Health %d/%d (Retaliates)\n",
+// 				i,
+// 				Jenis_Unit(InfoUnit(NearEnemyUnit[i])),
+// 				Absis(InfoUnit(NearEnemyUnit[i])), Ordinat(InfoUnit(NearEnemyUnit[i])),
+// 				Health(InfoUnit(NearEnemyUnit[i])),
+// 				Max_Health(InfoUnit(NearEnemyUnit[i]))
+// 			);
+// 		}
+// 		else {
+// 			printf("%d. %s (%d,%d) | Health %d/%d (Not Retaliates)\n",
+// 				i,
+// 				Jenis_Unit(InfoUnit(NearEnemyUnit[i])),
+// 				Absis(InfoUnit(NearEnemyUnit[i])), Ordinat(InfoUnit(NearEnemyUnit[i])),
+// 				Health(InfoUnit(NearEnemyUnit[i])),
+// 				Max_Health(InfoUnit(NearEnemyUnit[i]))
+// 			);
+// 		}
+// 	}
+// 	printf("Select enemy you want to attack : ");
+// 	int selected;
+// 	scanf("%d", &selected);
+//
+// 	AttackUnit(*Now, InfoUnit(NearEnemyUnit[selected]));
+// }

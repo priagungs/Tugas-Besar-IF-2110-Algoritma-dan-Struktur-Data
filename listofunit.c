@@ -265,3 +265,14 @@ Unit SearchNomor( ListUnit L, int nomor){
 	}
 	return InfoUnit(P);
 }
+
+void ResetMovementPoint(ListUnit *L){
+	addressUnit P = FirstUnit(*L);
+	if(P != Nil){
+		do {
+			Movement_Point(InfoUnit(P)) = Max_Movement_Point(InfoUnit(P));
+			P = NextUnit(P);
+		} while(P != FirstUnit(*L));
+
+	}
+}

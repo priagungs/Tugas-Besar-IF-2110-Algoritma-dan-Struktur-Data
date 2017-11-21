@@ -84,7 +84,7 @@ void GeserUnit(Unit *U, POINT P)
   }
 }
 
-void Attack(Unit *U1, Unit *U2)
+void AttackUnit(Unit *U1, Unit *U2)
 // Prekondisi, jarak U1 dan U2 harus sudah memungkinkan untuk attack
 // U1 menyerang U2, tipe serangan diperhatikan
 {

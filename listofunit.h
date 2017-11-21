@@ -108,4 +108,5 @@ void DelKoordinatUnit (ListUnit *L, POINT Koordinat, Unit *X);
 /* List mungkin menjadi kosong karena penghapusan */
 void PrintListUnit(ListUnit L);
 Unit SearchNomor( ListUnit L, int nomor);
+void ResetMovementPoint(ListUnit *L);
 #endif

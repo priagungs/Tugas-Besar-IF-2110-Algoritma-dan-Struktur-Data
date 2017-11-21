@@ -11,7 +11,7 @@
 #define Nil NULL
 
 typedef struct tElmtListVil *addressVillage;
-typedef struct tElmtListVil { 
+typedef struct tElmtListVil {
 	Village info;
 	addressVillage next;
 } ElmtListVil;
@@ -42,6 +42,8 @@ void DealokasiVil (addressVillage P);
 addressVillage SearchVil (ListVil L, Village X);
 /* Mencari apakah ada elemen ListVil dengan Info(P)= X */
 /* Jika ada, mengirimkan addressVillage elemen tersebut. */
+
+addressVillage SearchKoordinatVil (ListVil L, POINT Koordinat);
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/

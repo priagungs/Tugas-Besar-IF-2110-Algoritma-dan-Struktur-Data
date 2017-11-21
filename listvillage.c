@@ -29,7 +29,7 @@ addressVillage AlokasiVil (Village X)
     	return P;
     }
     else
-    	return Nil;    
+    	return Nil;
 }
 
 void DealokasiVil (addressVillage P)
@@ -39,14 +39,38 @@ void DealokasiVil (addressVillage P)
 /****************** PENCARIAN SEBUAH ELEMEN ListVil ******************/
 addressVillage SearchVil (ListVil L, Village X)
 {
-	if (IsEmptyVil(L)) 
+	if (IsEmptyVil(L))
 		return Nil;
 	else{
-		addressVillage P = FirstVillage(L); 
+		addressVillage P = FirstVillage(L);
 		while ((NextVillage(P) != FirstVillage(L)) && (!IsVillageSame(InfoVillage(P),X)))
-			P = NextVillage(P);  /* NextVil(P) = FirstVil(L) or InfoVil(P) = X */ 
+			P = NextVillage(P);  /* NextVil(P) = FirstVil(L) or InfoVil(P) = X */
 		if (IsVillageSame(InfoVillage(P),X)) return P;
-		else return Nil; 
+		else return Nil;
+	}
+}
+
+addressVillage SearchKoordinatVil (ListVil L, POINT Koordinat){
+	addressVillage P;
+	boolean found = false;
+	if (IsEmptyVil(L)) {
+		return Nil;
+	} else {
+		P = FirstVillage(L);
+		while (NextVillage(P) != FirstVillage(L) && !found) {
+			if((PosX(InfoVillage(P))) == Absis(Koordinat) && PosY(InfoVillage(P)) == Ordinat(Koordinat)){
+				found = true;
+			}
+			else {
+				P = NextVillage(P);
+			}
+		}
+		if (found){
+			return P;
+		} else {
+			printf("sdasd");
+			return Nil;
+		}
 	}
 }
 
@@ -92,31 +116,31 @@ void InsertFirstVil (ListVil *L, addressVillage P)
 	if (IsEmptyVil(*L))
  		NextVillage(P) = P;
 	else{/* L tidak kosong */
-		addressVillage last = FirstVillage(*L); 
+		addressVillage last = FirstVillage(*L);
 		while (NextVillage(last) != FirstVillage(*L))
-			last = NextVillage(last);/* NextVil(last) = FirstVil(L) ==> elemen terakhir */ 
-		NextVillage(P) = FirstVillage(*L); 
-		NextVillage(last) = P;  
-	}  
-	FirstVillage(*L) = P; 
+			last = NextVillage(last);/* NextVil(last) = FirstVil(L) ==> elemen terakhir */
+		NextVillage(P) = FirstVillage(*L);
+		NextVillage(last) = P;
+	}
+	FirstVillage(*L) = P;
 }
 
 void InsertLastVil (ListVil *L, addressVillage P)
 {
 	if (IsEmptyVil(*L))
  		InsertFirstVil(L,P);
-	else{    
-		addressVillage last = FirstVillage(*L);    
+	else{
+		addressVillage last = FirstVillage(*L);
 		while (NextVillage(last) != FirstVillage(*L))
 			last = NextVillage(last);
-		NextVillage(last) = P;      
-		NextVillage(P) = FirstVillage(*L); 
+		NextVillage(last) = P;
+		NextVillage(P) = FirstVillage(*L);
 	}
 }
 
 void InsertAfterVil (ListVil *L, addressVillage P, addressVillage Prec)
 {
-	NextVillage(P) = NextVillage(Prec); 
+	NextVillage(P) = NextVillage(Prec);
 	NextVillage(Prec) = P;
 }
 
@@ -124,18 +148,18 @@ void InsertAfterVil (ListVil *L, addressVillage P, addressVillage Prec)
 /*** PENGHAPUSAN SEBUAH ELEMEN ***/
 void DelFirstVil (ListVil *L, addressVillage *P)
 {
-	*P = FirstVillage(*L);  
-	if (NextVillage(FirstVillage(*L)) == FirstVillage(*L))/* satu elemen */ 
-		FirstVillage(*L) = Nil; 
-	else { 
-		addressVillage last = FirstVillage(*L); 
-		while (NextVillage(last) != FirstVillage(*L))  
-			last = NextVillage(last); 
+	*P = FirstVillage(*L);
+	if (NextVillage(FirstVillage(*L)) == FirstVillage(*L))/* satu elemen */
+		FirstVillage(*L) = Nil;
+	else {
+		addressVillage last = FirstVillage(*L);
+		while (NextVillage(last) != FirstVillage(*L))
+			last = NextVillage(last);
 		/* NextVil(last) = FirstVil(L) */
-		FirstVillage(*L) = NextVillage(FirstVillage(*L)); 
-		NextVillage(last) = FirstVillage(*L);  
-	}  
-	NextVillage(*P) = Nil; 
+		FirstVillage(*L) = NextVillage(FirstVillage(*L));
+		NextVillage(last) = FirstVillage(*L);
+	}
+	NextVillage(*P) = Nil;
 }
 
 void DelLastVil (ListVil *L, addressVillage *P)
@@ -194,4 +218,3 @@ void PrintListVillage (ListVil L)
 		PrintVillage(InfoVillage(P));
 	}
 }
-
