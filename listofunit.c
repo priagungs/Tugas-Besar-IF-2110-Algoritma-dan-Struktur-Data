@@ -40,6 +40,7 @@ addressUnit AlokasiUnit (Unit X){
 		Health(InfoUnit(P)) = Health(X);
 		Attack_Damage(InfoUnit(P)) = Attack_Damage(X);
 		Max_Movement_Point(InfoUnit(P)) = Max_Movement_Point(X);
+		Movement_Point(InfoUnit(P)) = Movement_Point(InfoUnit(P));
 		Tipe_Serangan(InfoUnit(P)) = Tipe_Serangan(X);
 		Kesempatan_Serangan(InfoUnit(P)) = Kesempatan_Serangan(X);
 		Lokasi_Unit(InfoUnit(P)) = Lokasi_Unit(X);
@@ -235,12 +236,30 @@ void DelKoordinatUnit (ListUnit *L, POINT Koordinat){
 }
 
 void PrintListUnit(ListUnit L){
+	int cnt = 1;
 	if(!IsEmptyUnit(L)){
 		addressUnit P = FirstUnit(L);
 		while(NextUnit(P) != FirstUnit(L)){
-			printf("%s %d %d\n",Jenis_Unit(InfoUnit(P)), Absis(Lokasi_Unit(InfoUnit(P))), Ordinat(Lokasi_Unit(InfoUnit(P))));
+			printf("%d. %s\n",cnt, Jenis_Unit(InfoUnit(P)));
+			PrintUnit(InfoUnit(P));
 			P = NextUnit(P);
+			cnt++;
+			printf("\n");
 		}
-		printf("%s %d %d\n", Jenis_Unit(InfoUnit(P)),Absis(Lokasi_Unit(InfoUnit(P))), Ordinat(Lokasi_Unit(InfoUnit(P))));
+		printf("%d. %s\n", cnt, Jenis_Unit(InfoUnit(P)));
+		PrintUnit(InfoUnit(P));
+		printf("\n");
 	}
+}
+
+
+Unit SearchNomor( ListUnit L, int nomor){
+	addressUnit P;
+	P = FirstUnit(L);
+	nomor --;
+	while(nomor != 0){
+		P = NextUnit(P);
+		nomor--;
+	}
+	return InfoUnit(P);
 }

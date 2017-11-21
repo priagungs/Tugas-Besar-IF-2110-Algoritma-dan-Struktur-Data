@@ -3,7 +3,7 @@
 #include "village.h"
 #include "listofunit.h"
 #include "unit.h"
-#include "player.h"	
+#include "player.h"
 
 void Make_Player(Player *Pl, int warna){
 	Gold(*Pl) = 1000;
@@ -22,12 +22,16 @@ void Update_Gold(Player *Pl, int Amount){
 
 void Update_Income(Player *Pl, int Amount){
 // income bertambah sebanyak Amount
-	Income(*Pl) += Amount;	
+	Income(*Pl) += Amount;
 }
 
 void Update_Upkeep(Player *Pl, int Amount){
 // upkeep bertambah sebanyak Amount
 	Upkeep(*Pl) += Amount;
+}
+
+void Update_Turn(Player *Pl){
+	Gold(*Pl) += (Income(*Pl)-Upkeep(*Pl));
 }
 
 void Add_Unit(Player *Pl, Unit U){
@@ -36,7 +40,7 @@ void Add_Unit(Player *Pl, Unit U){
 }
 
 void Del_Unit(Player *Pl, Unit U){
-// menghapus U pada list of unit di player	
+// menghapus U pada list of unit di player
 	DelKoordinatUnit (&UnitList(*Pl), Lokasi_Unit(U));
 }
 
@@ -50,12 +54,4 @@ void Del_Village (Player *Pl, Village V){
 // menghapus V pada list of village di player
 	Update_Income(Pl, -1*IncomeVil(V));
 	DelPVil(&VillageList(*Pl),V);
-}
-
-void PrintPlayerInfo(Player P){
-// menampilkan atribut atribut yang dimiliki player
-	printf("Gold = %d\n",Gold(P));
-	printf("Income = %d\n",Income(P));
-	printf("Upkeep = %d\n",Upkeep(P));
-	printf("Warna = %d\n",Warna(P));
 }

@@ -50,4 +50,7 @@ boolean CanUnitMoveTo(Unit U, POINT P);
 boolean CanUnitAttack(Unit U1, Unit U2);
 // true jika unit U1 dapat menyerang unit U2
 
+void PrintUnit ( Unit U);
+// menampilakan ke layar atribut atribut suatu unit
+
 #endif

@@ -20,7 +20,7 @@
 typedef int indeks; /* indeks baris, kolom */
 
 
-typedef struct { 
+typedef struct {
 	char bangunanPetak; //Ada (T)ower, (C)astle, (V)illage, dan (N)ormal
 	int kepemilikanBangunanPetak; //Ada (0)Normal, (1)Player1, dan (2)Player2
 	char unitPetak; //Ada (K)ing, (A)rcher, (S)wordsman, (W)hite Mage, dan (N)othing
@@ -28,9 +28,9 @@ typedef struct {
 } PETAK;
 
 
-typedef struct { 
+typedef struct {
 	PETAK Mem[BrsMax+1][KolMax+1];
-    int NBrsEff; /* banyaknya/ukuran baris yg terdefinisi */
+  int NBrsEff; /* banyaknya/ukuran baris yg terdefinisi */
 	int NKolEff; /* banyaknya/ukuran kolom yg terdefinisi */
 } PETA;
 /* Indeks matriks of petak yang digunakan: [BrsMin..BrsMax][KolMin..KolMax] */
@@ -42,7 +42,7 @@ typedef struct {
 #define BP(P,i,j) (P).Mem[i][j].bangunanPetak
 #define KBP(P,i,j) (P).Mem[i][j].kepemilikanBangunanPetak
 #define UP(P,i,j) (P).Mem[i][j].unitPetak
-#define KUP(P,i,j) (P).Mem[i][j].kepemilikanBangunanPetak
+#define KUP(P,i,j) (P).Mem[i][j].kepemilikanUnitPetak
 
 void InitiateTowerCastle (PETA *M);
 /* Memposisikan tower dan castle setiap pemain */
@@ -54,4 +54,7 @@ void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV );
 void PrintPETA(PETA P);
 
 void RandomVillage (ListVil *L, int NVillage, int x, int y,PETA *P);
+
+boolean NoObstacle(Unit CurrentUnit, POINT P, PETA M);
+
 #endif

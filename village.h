@@ -9,17 +9,15 @@
 #include "boolean.h"
 #include "point.h"
 
-typedef struct 
+typedef struct
 {
 	POINT indeks;
-	int income; // nilai pendapatan desa 
-	int owner; // kepemilikan menandakan milik player berapa village tsb
+	int income; // nilai pendapatan desa
 } Village;
 
 #define PosX(V) Absis((V).indeks)
 #define PosY(V) Ordinat((V).indeks)
 #define	IncomeVil(V) (V).income
-#define Own(V) (V).owner
 
 boolean IsVillageSame( Village V1, Village V2);
 void CopyVillage( Village V1, Village V2);
