@@ -21,11 +21,11 @@ void InitiateTowerCastle (PETA *M){
     KBP(*M,NKolEff(*M)-3,BrsMin+1) = 2;
    	KBP(*M,NKolEff(*M)-2,BrsMin) = 2;
     KBP(*M,NKolEff(*M)-2,BrsMin+1) = 2;
-    KBP(*M,NKolEff(*M)-2,BrsMin+2) = 2;    
+    KBP(*M,NKolEff(*M)-2,BrsMin+2) = 2;
     KBP(*M,NKolEff(*M)-1,BrsMin+1) = 2;
 
 /* Memposisikan tower dan castle setiap pemain */
-	 
+
     /* Untuk Player 1 */
     BP(*M,KolMin,NBrsEff(*M)-2) = 'C';
     BP(*M,KolMin+1,NBrsEff(*M)-3) = 'C';
@@ -37,7 +37,7 @@ void InitiateTowerCastle (PETA *M){
     BP(*M,NKolEff(*M)-3,BrsMin+1) = 'C';
    	BP(*M,NKolEff(*M)-2,BrsMin) = 'C';
     BP(*M,NKolEff(*M)-2,BrsMin+1) = 'T';
-    BP(*M,NKolEff(*M)-2,BrsMin+2) = 'C';    
+    BP(*M,NKolEff(*M)-2,BrsMin+2) = 'C';
     BP(*M,NKolEff(*M)-1,BrsMin+1) = 'C';
 }
 
@@ -393,14 +393,14 @@ boolean NoObstacle(Unit U, POINT P, PETA M){
   // vertical
   else if(Absis(P) == Absis(Lokasi_Unit(U))){
     if(Ordinat(P) > Ordinat(Lokasi_Unit(U))){
-      for(int i=Ordinat(Lokasi_Unit(U))+1; i <= Ordinat(P); i++){ //row checking
+      for(int i=Ordinat(Lokasi_Unit(U)); i <= Ordinat(P); i++){ //row checking
         if(KUP(M, Absis(P), i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,Absis(P),i) != 0){
           return false;
         }
       }
     }
     else if(Ordinat(P) < Ordinat(Lokasi_Unit(U))){
-      for(int i=Ordinat(Lokasi_Unit(U))-1; i >= Ordinat(P); i--){ //row checking
+      for(int i=Ordinat(Lokasi_Unit(U)); i >= Ordinat(P); i--){ //row checking
         if(KUP(M, Absis(P), i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,Absis(P),i) != 0){
           return false;
         }

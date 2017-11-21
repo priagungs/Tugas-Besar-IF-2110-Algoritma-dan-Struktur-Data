@@ -40,7 +40,7 @@ addressUnit AlokasiUnit (Unit X){
 		Health(InfoUnit(P)) = Health(X);
 		Attack_Damage(InfoUnit(P)) = Attack_Damage(X);
 		Max_Movement_Point(InfoUnit(P)) = Max_Movement_Point(X);
-		Movement_Point(InfoUnit(P)) = Movement_Point(InfoUnit(P));
+		Movement_Point(InfoUnit(P)) = Movement_Point(X);
 		Tipe_Serangan(InfoUnit(P)) = Tipe_Serangan(X);
 		Kesempatan_Serangan(InfoUnit(P)) = Kesempatan_Serangan(X);
 		Lokasi_Unit(InfoUnit(P)) = Lokasi_Unit(X);

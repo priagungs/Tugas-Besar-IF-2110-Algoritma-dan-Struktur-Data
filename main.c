@@ -36,29 +36,38 @@ int main(){
 
 	printf("Masukkan input besar peta (KOLOM,BARIS)\n");
 	scanf("%d %d", &NK,&NB);
-	
+
 	MakePETA(NK,NB,&P);
 	Unit Now = CreateUnit("King",MakePOINT(KolMin+1,NB-2));
 	InsUnitFirst(&UnitList(P1),Now);
+	printf("%d\n", Movement_Point(Now));
+	printf("%s\n", Tipe_Serangan(InfoUnit(FirstUnit(UnitList(P1)))));
+	printf("%d\n", Max_Movement_Point(InfoUnit(FirstUnit(UnitList(P1)))));
+	printf("%d\n", Movement_Point(InfoUnit(FirstUnit(UnitList(P1)))));
+
+
 	Now = CreateUnit("King",MakePOINT(NK-2,BrsMin+1));
 	InsUnitFirst(&UnitList(P2),Now);
+	printf("%d\n", Movement_Point(InfoUnit(FirstUnit(UnitList(P2)))));
 
 	RandomVillage(&Villages,10,NK,NB,&P);
 	PrintListVillage(Villages);
-	
+
 	UpdatePETA(&P,P1,P2,Villages);
 	PrintPETA(P);
 	IndeksUnit = 1;
-	Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));	
+	DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
+	printf("%d\n", Movement_Point(Now));
 	do{
 		PrintPlayerStatus(*CurrentPlayer,Now);
 		printf("Your Input: ");
 		scanf("%s",Str);
-		
+
 		if(!strcmp(Str,"MOVE")){
 			Move(P, &Now);
+			InsUnitFirst(&UnitList(*CurrentPlayer), Now);
 		}else if(!strcmp(Str,"UNDO")){
-			
+
 		}else if(!strcmp(Str,"CHANGE_UNIT")){
 
 		}else if(!strcmp(Str,"NEXT_UNIT")){
@@ -67,14 +76,14 @@ int main(){
 		}else if(!strcmp(Str,"RECRUIT")){
 			RekrutUnit();
 		}else if(!strcmp(Str,"ATTACK")){
-			
+
 		}else if(!strcmp(Str,"MAP")){
 			UpdatePETA(&P,P1,P2,Villages);
 			PrintPETA(P);
-			
+
 		}else if(!strcmp(Str,"INFO")){
 
-			
+
 		}else if(!strcmp(Str,"END_TURN")){
 			if(turn%2){
 				CurrentPlayer = &P2;
@@ -84,9 +93,9 @@ int main(){
 				turn++;
 			}
 			IndeksUnit = 1;
-			Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));	
+			DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
 		}else if(!strcmp(Str,"SAVE")){
-			
+
 		}else{
 			if(strcmp(Str,"EXIT")){
 				printf("No command found!\n");
@@ -120,11 +129,11 @@ void RekrutUnit(void){
 		printf("Masukan pilihan(string):\n");
 		fgets(jenisUnitRekrut, 200, stdin);
 		if ((pos=strchr(jenisUnitRekrut, '\n')) != NULL)*pos = '\0';
-	} 
+	}
 
 	boolean bisaRekrutUnit = false;
 
-	POINT lokasiUnitDirekrut; // tergantung player 1/2 
+	POINT lokasiUnitDirekrut; // tergantung player 1/2
 
 	if (Warna(*CurrentPlayer) == 1 )
 	{
@@ -170,19 +179,19 @@ void RekrutUnit(void){
 								castleDipilih = true;
 							} else {
 								printf("Semua castle anda penuh!\n");
-								
-							}	
+
+							}
 						}
-						
+
 					}
 				}
 			}
-			
+
 
 		} else {
 			printf("King anda harus berada di tower!\n");
 		}
-			
+
 	} else {
 
 		if (UP(P,NKolEff(P)-2,BrsMin+1) =='K')
@@ -227,10 +236,10 @@ void RekrutUnit(void){
 								castleDipilih = true;
 							} else {
 								printf("Castle anda penuh!\n");
-								
-							}	
+
+							}
 						}
-						
+
 					}
 				}
 			}
@@ -278,7 +287,7 @@ void Move(PETA M, Unit* CurrentUnit){
 void PrintPlayerStatus(Player PlayerTemp,Unit U){
 	printf("Player %d's Turn\n",Warna(PlayerTemp));
 	printf("Cash: %dG | Income: %dG | Upkeep: %dG\n", Gold(PlayerTemp),Income(PlayerTemp),Upkeep(PlayerTemp));
-	printf("Unit: %s (%d,%d) | Health %d/%d | Movement Point: %d | Can Attack: ", 
+	printf("Unit: %s (%d,%d) | Health %d/%d | Movement Point: %d | Can Attack: ",
 		Jenis_Unit(U),
 		Absis(Lokasi_Unit(U)),
 		Ordinat(Lokasi_Unit(U)),

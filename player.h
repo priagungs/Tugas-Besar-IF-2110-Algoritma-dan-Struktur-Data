@@ -27,7 +27,6 @@ typedef struct
 #define Income(P) (P).Income
 #define Upkeep(P) (P).Upkeep
 #define Warna(P) (P).Warna
-#define CurrentUnit(P) (P)CurrUnit
 #define UnitList(P) (P).LUnit
 #define VillageList(P) (P).LVillage
 

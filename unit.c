@@ -19,12 +19,12 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Harga_Unit(U) = 10;
     UpkeepUnit(U) = 0;
     Health(U) = Max_Health(U);
-    Movement_Point(U) = 0;
+    Movement_Point(U) = 10;
     Tipe_Serangan(U) = "Melee";
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
   }
-  if(!strcmp(jenis,"Archer")){
+  else if(!strcmp(jenis,"Archer")){
     Jenis_Unit(U) = "Archer";
     // Dibawah ini bisa disesuaikan angka angka nya
     Max_Health(U) = 40;
@@ -38,7 +38,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
   }
-  if(!strcmp(jenis,"Swordsman")){
+  else if(!strcmp(jenis,"Swordsman")){
     Jenis_Unit(U) = "Swordsman";
     // Dibawah ini bisa disesuaikan angka angka nya
     Max_Health(U) = 80;
@@ -52,7 +52,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
   }
-  if(!strcmp(jenis,"White Mage")){
+  else if(!strcmp(jenis,"White Mage")){
     Jenis_Unit(U) = "White Mage";
     Max_Health(U) = 60;
     Attack_Damage(U) = 20;
