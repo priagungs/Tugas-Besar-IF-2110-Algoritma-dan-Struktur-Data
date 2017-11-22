@@ -38,7 +38,7 @@ Unit CreateUnit(char* jenis, POINT Lokasi);
 void GeserUnit(Unit *U, POINT P);
 // menggeser unit ke arah "sumbu" sebanyak "langkah"
 
-void Attack(Unit *U1, Unit *U2);
+void AttackUnit(Unit *U1, Unit *U2);
 // U1 menyerang U2, tipe serangan diperhatikan
 
 boolean IsUnitDead(Unit U);

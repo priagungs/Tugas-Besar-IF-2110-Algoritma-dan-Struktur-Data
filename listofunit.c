@@ -276,3 +276,14 @@ void ResetMovementPoint(ListUnit *L){
 
 	}
 }
+
+void ResetAttackChance(ListUnit *L){
+	addressUnit P = FirstUnit(*L);
+	if(P != Nil){
+		do {
+			Kesempatan_Serangan(InfoUnit(P)) = true;
+			P = NextUnit(P);
+		} while(P != FirstUnit(*L));
+
+	}
+}

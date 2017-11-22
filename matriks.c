@@ -372,12 +372,13 @@ boolean NoObstacle(Unit U, POINT P, PETA M){
   boolean noObstacle = true;
 
   // horizontal
+  if(KUP(M, Absis(P), Ordinat(P)) == KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U)))){
+      return false;
+  }
   if(Ordinat(P) == Ordinat(Lokasi_Unit(U))){
     if(Absis(P) > Absis(Lokasi_Unit(U))){
       for(int i=Absis(Lokasi_Unit(U)); i <= Absis(P); i++){ //row checking
         if(KUP(M, i, Ordinat(P)) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M,i,Ordinat(P)) != 0){
-          printf("%d ", KUP(M,i,Ordinat(P)));
-          printf("%d %d\n", i, Ordinat(P));
           return false;
         }
       }

@@ -109,4 +109,5 @@ void DelKoordinatUnit (ListUnit *L, POINT Koordinat, Unit *X);
 void PrintListUnit(ListUnit L);
 Unit SearchNomor( ListUnit L, int nomor);
 void ResetMovementPoint(ListUnit *L);
+void ResetAttackChance(ListUnit *L);
 #endif
