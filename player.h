@@ -35,9 +35,10 @@ void Make_Player(Player *Pl, int warna);
 void Update_Gold(Player *Pl, int Amount);
 void Update_Income(Player *Pl, int Amount);
 void Update_Upkeep(Player *Pl, int Amount);
-void Add_Unit(Player *Pl, Unit U);
+void Add_Unit_First(Player *Pl, Unit U);
+void Add_Unit_Last(Player *Pl, Unit U);
 void Del_Unit(Player *Pl, Unit U);
 void Add_Village (Player *Pl, Village V);
 void Del_Village (Player *Pl, Village V);
-void Next_Unit(Player Pl,int *nomor, Unit *Now);
+void Next_Unit(Player Pl,int *nomor, Unit *Now, boolean *ada);
 #endif
