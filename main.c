@@ -18,7 +18,7 @@ int turn=1;
 
 PETA P;
 
-//Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c -o hasil
+//Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c -o hasil
 
 void RekrutUnit(void);
 
@@ -57,6 +57,7 @@ int main(){
 	UpdatePETA(&P,P1,P2,Villages);
 	PrintPETA(P);
 	IndeksUnit = 1;
+	Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
 	do{
 		PrintPlayerStatus(*CurrentPlayer,Now);
 		printf("Your Input: ");
@@ -124,6 +125,7 @@ int main(){
 		}else if(!strcmp(Str,"RECRUIT")){
 			ClearStack(&SP);
 			RekrutUnit();
+			UpdatePETA(&P,P1,P2,Villages);
 		}else if(!strcmp(Str,"ATTACK")){
 			ClearStack(&SP);
 			// //pop current unit from list of unit
@@ -164,12 +166,12 @@ int main(){
 			if(turn%2){
 				CurrentPlayer = &P2;
 				ResetMovementPoint(&UnitList(*CurrentPlayer));
-				// Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer));
+				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
 				turn++;
 			} else {
 				CurrentPlayer = &P1;
 				ResetMovementPoint(&UnitList(*CurrentPlayer));
-				// Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer));
+				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
 				turn++;
 			}
 			IndeksUnit = 1;
