@@ -180,7 +180,7 @@ void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV ){
       		int j =	PosY(InfoVillage(AlamatV2));
       		BP(*P,i,j) = 'V';
       		KBP(*P,i,j) = 2;
-      		AlamatV1 = NextVillage(AlamatV2);
+      		AlamatV2 = NextVillage(AlamatV2);
     	}
   	}
 }

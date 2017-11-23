@@ -1,4 +1,4 @@
-clrscr()/*#include "jam.h"*/
+/*#include "jam.h"*/
 #include "stackofplayer.h"
 #include "listvillage.h"
 #include "matriks.h"
@@ -65,45 +65,50 @@ int main(){
 
 		if(!strcmp(Str,"MOVE")){
 			//pop current unit from list of unit
+			if(Movement_Point(Now) != 0){
+				Del_Unit(CurrentPlayer, Now);
+				Push(&SP,*CurrentPlayer);
+				Move(P, &Now);
+				//push moved current unit to list of unit
 
-			Del_Unit(CurrentPlayer, Now);
-			Push(&SP,*CurrentPlayer);
-			Move(P, &Now);
-			//push moved current unit to list of unit
-
-			if(BP(P, Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 'V'){
-				if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 0){
-					Movement_Point(Now) = 0;
-					addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
-					Add_Village(CurrentPlayer, InfoVillage(V));
-				}
-				else{
-					if(CurrentPlayer == &P1){
-						if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 2){
-							Movement_Point(Now) = 0;
-							addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
-							Add_Village(CurrentPlayer, InfoVillage(V));
-							Del_Village(&P2, InfoVillage(V));
+				if(BP(P, Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 'V'){
+					if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 0){
+						Movement_Point(Now) = 0;
+						addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
+						Add_Village(CurrentPlayer, InfoVillage(V));
+					}
+					else{
+						if(CurrentPlayer == &P1){
+							if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 2){
+								Movement_Point(Now) = 0;
+								addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
+								Add_Village(CurrentPlayer, InfoVillage(V));
+								Del_Village(&P2, InfoVillage(V));
+							}
+						}
+						else if (CurrentPlayer == &P2){
+							if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 1){
+								Movement_Point(Now) = 0;
+								addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
+								Add_Village(CurrentPlayer, InfoVillage(V));
+								Del_Village(&P1, InfoVillage(V));
+							}
 						}
 					}
-					else if (CurrentPlayer == &P2){
-						if(KBP(P,Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 1){
-							Movement_Point(Now) = 0;
-							addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
-							Add_Village(CurrentPlayer, InfoVillage(V));
-							Del_Village(&P1, InfoVillage(V));
-						}
-					}
 				}
+
+				if(!strcmp(Jenis_Unit(Now),"King"))
+					Add_Unit_First(CurrentPlayer, Now);
+				else
+					Add_Unit_Last(CurrentPlayer, Now);
+				UpdatePETA(&P,P1,P2,Villages);
+				clrscr();
+				PrintPETA(P);
+			}
+			else {
+				printf("You can't move, your movement point is 0\n");
 			}
 
-			if(!strcmp(Jenis_Unit(Now),"King"))
-				Add_Unit_First(CurrentPlayer, Now);
-			else
-				Add_Unit_Last(CurrentPlayer, Now);
-			UpdatePETA(&P,P1,P2,Villages);
-			clrscr();
-			PrintPETA(P);
 		}
 
 		else if(!strcmp(Str,"UNDO")){
@@ -161,6 +166,7 @@ int main(){
 				Attack(&Now, &P1);
 			}
 
+
 			//push moved current unit to list of unit
 			if(Health(Now) != 0){
 				if(!strcmp(Jenis_Unit(Now), "King")){
@@ -194,8 +200,8 @@ int main(){
 			printf("Enter the coordinate of the cell you want to see : ");
 			scanf("%d%d",&x,&y);
 			POINT temp = MakePOINT(x,y);
-			//clrscr();
-			//PrintPETA(P);
+			clrscr();
+			PrintPETA(P);
 			INFO(temp);
 		}
 
@@ -443,24 +449,22 @@ void RekrutUnit(void){
   }
 
   if (bisaRekrutUnit){
-   Unit RekrutUnit = CreateUnit(jenisUnitRekrut,lokasiUnitDirekrut);
-   Add_Unit_First(CurrentPlayer,RekrutUnit);
-   int hargaUnit = -1*Harga_Unit(RekrutUnit);
-   int upkeepUnit = UpkeepUnit(RekrutUnit);
+	Unit RekrutUnit = CreateUnit(jenisUnitRekrut,lokasiUnitDirekrut);
+	Add_Unit_First(CurrentPlayer,RekrutUnit);
+	int hargaUnit = -1*Harga_Unit(RekrutUnit);
+	int upkeepUnit = UpkeepUnit(RekrutUnit);
 
-   Update_Gold(CurrentPlayer, hargaUnit);
-   Update_Upkeep(CurrentPlayer, upkeepUnit);
-   UpdatePETA(&P,P1,P2,Villages);
-   clrscr();
-   PrintPETA(P);
-   printf("Unit berhasil direkrut!\n");
+	Update_Gold(CurrentPlayer, hargaUnit);
+	Update_Upkeep(CurrentPlayer, upkeepUnit);
+	UpdatePETA(&P,P1,P2,Villages);
+	clrscr();
+	PrintPETA(P);
+	printf("Unit berhasil direkrut!\n");
 
-  } else {
-   printf("Unit tidak berhasil direkrut.\n");
-  }
+	} else {
+	printf("Unit tidak berhasil direkrut.\n");
+	}
  }
-
-
 }
 
 void Move(PETA M, Unit* CurrentUnit){
@@ -477,7 +481,7 @@ void Move(PETA M, Unit* CurrentUnit){
 				}
 			}
 		}
-		// clrscr();
+		clrscr();
 		PrintPETA(M);
 
 		printf("Please enter coordinate x y : ");
@@ -530,10 +534,11 @@ void clrscr()
 
 void Attack(Unit* Now, Player* Enemy){
 	addressUnit P = FirstUnit(UnitList(*Enemy));
+	printf("govlok");
 	Unit NearEnemyUnit[5];
 	int N=0;
 	boolean end = false;
-	while(!end){
+	while(!end && P != Nil){
 		if(Panjang(Lokasi_Unit(InfoUnit(P)), Lokasi_Unit(*Now)) == 1){
 			N++;
 			DelKoordinatUnit(&UnitList(*Enemy), Lokasi_Unit(InfoUnit(P)), &NearEnemyUnit[N]);
