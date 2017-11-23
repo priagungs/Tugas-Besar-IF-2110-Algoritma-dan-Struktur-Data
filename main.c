@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "point.h"
 
 int NB,NK,IndeksUnit;
 char Str[15];
@@ -29,6 +30,8 @@ void RekrutUnit(void);
 void clrscr();
 void INFO(POINT temp);
 Player Undo(StackPlayer SP);
+void HealWhiteMage(Player* P, PETA M);
+void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV );
 
 int main(){
 	clrscr();
@@ -121,7 +124,7 @@ int main(){
 
 		else if(!strcmp(Str,"CHANGE_UNIT")){
 			int nomor;
-			printf("                                       ============= YOUR UNITS =============\n");
+			printf("============= YOUR UNITS =============\n");
 			PrintListUnit(UnitList(*CurrentPlayer));
 			printf("Choose unit number : ");
 			scanf("%d",&nomor);
@@ -222,7 +225,9 @@ int main(){
 			IndeksUnit = 2;
 			clrscr();
 			PrintPETA(P);
-			// DelUnitFirst(&UnitList(*CurrentPlayer), &Now);
+			HealWhiteMage(&P1, P);
+			HealWhiteMage(&P2, P);
+			HealVillage(&P, &P1, &P2, Villages);
 		}
 
 		else if(!strcmp(Str,"SAVE")){
@@ -240,231 +245,251 @@ int main(){
 	ClearStack(&SP);
 }
 
+
 void RekrutUnit(void){
- //Cek castle tidak penuh!
- boolean kondisiRekrutUnitBisa= true;
- if (Warna(*CurrentPlayer) == 1 )
- {
-  //printf("GOBLOK TEST\n");
-  if (UP(P,KolMin+1,NBrsEff(P)-2)=='K')
-  {
-   if((UP(P,KolMin+1,NBrsEff(P)-3)=='N') ){
+	//Cek castle tidak penuh!
+	boolean kondisiRekrutUnitBisa= true;
+	if (Warna(*CurrentPlayer) == 1 )
+	{
+		//printf("GOBLOK TEST\n");
+		if (UP(P,KolMin+1,NBrsEff(P)-2)=='K')
+		{
+			if((UP(P,KolMin+1,NBrsEff(P)-3)=='N') ){
 
-   } else {
+			} else {
 
-    if((UP(P,KolMin,NBrsEff(P)-2)=='N')){
+				if((UP(P,KolMin,NBrsEff(P)-2)=='N')){
 
-    } else {
+				} else {
 
-     if((UP(P,KolMin+1,NBrsEff(P)-1)=='N')){
+					if((UP(P,KolMin+1,NBrsEff(P)-1)=='N')){
 
-     } else {
+					} else {
 
-      if((UP(P,KolMin+2,NBrsEff(P)-2)=='N')){
+						if((UP(P,KolMin+2,NBrsEff(P)-2)=='N')){
 
-      } else {
-       printf("Castle anda penuh semua!\n");
-       kondisiRekrutUnitBisa=false;
-      }
-     }
+						} else {
+							printf("Castle anda penuh semua!\n");
+							kondisiRekrutUnitBisa=false;
+						}
+					}
 
-    }
-   }
-  }else {
-   printf("King anda harus berada di tower!\n");
-   kondisiRekrutUnitBisa=false;
-  }
+				}
+			}
+		}else {
+			printf("King anda harus berada di tower!\n");
+			kondisiRekrutUnitBisa=false;
+		}
 
-
- } else {
-
-  if (UP(P,NKolEff(P)-2,BrsMin+1) =='K')
-  {
-
-   if((UP(P,NKolEff(P)-2,BrsMin)=='N')  ){
-
-   } else {
-
-    if((UP(P,NKolEff(P)-3,BrsMin+1)=='N')){
-
-    } else {
-
-     if((UP(P,NKolEff(P)-2,BrsMin+2)=='N')){
-
-     } else {
-
-      if((UP(P,NKolEff(P)-1,BrsMin+1)=='N')){
-
-      } else {
-       printf("Castle anda penuh semua!\n");
-       kondisiRekrutUnitBisa=false;
-      }
-     }
-
-    }
-   }
-  }else {
-   printf("King anda harus berada di tower!\n");
-   kondisiRekrutUnitBisa=false;
-  }
-
- }
-
- if (kondisiRekrutUnitBisa)
- {
-  printf("Masukan jenis unit yang ingin di rekrut.\n");
-  printf("1. Swordsman\n");
-  printf("2. Archer\n");
-  printf("3. White Mage\n");
-  printf("Masukan pilihan(integer):\n");
-
-  char jenisUnitRekrut[200];
-  int pilihanUnit;
-  scanf("%d", &pilihanUnit);
-
-  while (pilihanUnit<1 || pilihanUnit>3 )
-  {
-   printf("Masukan jenis unit anda masukan salah.\n");
-   printf("Masukan kembali jenis unit yang ingin di rekrut.\n");
-   printf("1. Swordsman\n");
-   printf("2. Archer\n");
-   printf("3. White Mage\n");
-   printf("Masukan pilihan(integer):\n");
-   scanf("%d", &pilihanUnit);
-  }
-
-  if (pilihanUnit==1)
-  {
-   strcpy(jenisUnitRekrut,"Swordsman");
-  } else if (pilihanUnit==2){
-   strcpy(jenisUnitRekrut,"Archer");
-  } else {
-   strcpy(jenisUnitRekrut,"White Mage");
-  }
-
-  boolean bisaRekrutUnit = false;
-  POINT lokasiUnitDirekrut; // tergantung player 1/2
-
-  if (Warna(*CurrentPlayer) == 1 )
-  {
-   if (UP(P,KolMin+1,NBrsEff(P)-2)=='K')
-   {
-    boolean castleDipilih = false;
-    while(castleDipilih == false){
-     printf("Pilih castle di mana unit akan direkrut!\n");
-     printf("1. Castle Utara\n");
-     printf("2. Castle Barat\n");
-     printf("3. Castle Selatan\n");
-     printf("4. Castle Timur\n");
-     printf("Masukan angka castle (1-4):\n");
-     int castleRekrut;
-     scanf("%d", &castleRekrut);
-     while(castleRekrut<1 || castleRekrut>4){
-      printf("Masukan anda salah! Masukan angka castle kembali.\n");
-      scanf("%d", &castleRekrut);
-     }
-
-     if((UP(P,KolMin+1,NBrsEff(P)-3)=='N') && castleRekrut==1 ){
-      lokasiUnitDirekrut = MakePOINT(KolMin+1,NBrsEff(P)-3);
-      bisaRekrutUnit = true;
-      castleDipilih = true;
-     } else {
-
-      if((UP(P,KolMin,NBrsEff(P)-2)=='N')&& castleRekrut==2){
-       lokasiUnitDirekrut = MakePOINT(KolMin,NBrsEff(P)-2);
-       bisaRekrutUnit = true;
-       castleDipilih = true;
-      } else {
-
-       if((UP(P,KolMin+1,NBrsEff(P)-1)=='N')&& castleRekrut==3){
-        lokasiUnitDirekrut = MakePOINT(KolMin+1,NBrsEff(P)-1);
-        bisaRekrutUnit = true;
-        castleDipilih = true;
-       } else {
-
-        if((UP(P,KolMin+2,NBrsEff(P)-2)=='N')&& castleRekrut==4){
-         lokasiUnitDirekrut = MakePOINT(KolMin+2,NBrsEff(P)-2);
-         bisaRekrutUnit = true;
-         castleDipilih = true;
-        } else {
-         printf("Castle anda penuh!\n");
-        }
-       }
-      }
-     }
-    }
-   }
-
-  } else {
-
-   if (UP(P,NKolEff(P)-2,BrsMin+1) =='K')
-   {
-    boolean castleDipilih = false;
-    while(castleDipilih == false){
-     printf("Pilih castle di mana unit akan direkrut!\n");
-     printf("Pilihan:\n");
-     printf("1. Castle Utara\n");
-     printf("2. Castle Barat\n");
-     printf("3. Castle Selatan\n");
-     printf("4. Castle Timur\n");
-     printf("Masukan angka castle (1-4):\n");
-     int castleRekrut;
-     scanf("%d", &castleRekrut);
-     while(castleRekrut<1 || castleRekrut>4){
-      printf("Masukan anda salah! Masukan angka castle kembali.\n");
-      scanf("%d", &castleRekrut);
-     }
-
-     if((UP(P,NKolEff(P)-2,BrsMin)=='N') && castleRekrut==1 ){
-      lokasiUnitDirekrut = MakePOINT(NKolEff(P)-2,BrsMin);
-      bisaRekrutUnit = true;
-      castleDipilih = true;
-     } else {
-
-      if((UP(P,NKolEff(P)-3,BrsMin+1)=='N')&& castleRekrut==2){
-       lokasiUnitDirekrut = MakePOINT(NKolEff(P)-3,BrsMin+1);
-       bisaRekrutUnit = true;
-       castleDipilih = true;
-      } else {
-
-       if((UP(P,NKolEff(P)-2,BrsMin+2)=='N')&& castleRekrut==3){
-        lokasiUnitDirekrut = MakePOINT(NKolEff(P)-2,BrsMin+2);
-        bisaRekrutUnit = true;
-        castleDipilih = true;
-       } else {
-
-        if((UP(P,NKolEff(P)-1,BrsMin+1)=='N')&& castleRekrut==4){
-         lokasiUnitDirekrut = MakePOINT(NKolEff(P)-1,BrsMin+1);
-         bisaRekrutUnit = true;
-         castleDipilih = true;
-        } else {
-         printf("Castle anda penuh!\n");
-
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-
-  if (bisaRekrutUnit){
-	Unit RekrutUnit = CreateUnit(jenisUnitRekrut,lokasiUnitDirekrut);
-	Add_Unit_First(CurrentPlayer,RekrutUnit);
-	int hargaUnit = -1*Harga_Unit(RekrutUnit);
-	int upkeepUnit = UpkeepUnit(RekrutUnit);
-
-	Update_Gold(CurrentPlayer, hargaUnit);
-	Update_Upkeep(CurrentPlayer, upkeepUnit);
-	UpdatePETA(&P,P1,P2,Villages);
-	clrscr();
-	PrintPETA(P);
-	printf("Unit berhasil direkrut!\n");
 
 	} else {
-	printf("Unit tidak berhasil direkrut.\n");
+
+		if (UP(P,NKolEff(P)-2,BrsMin+1) =='K')
+		{
+
+			if((UP(P,NKolEff(P)-2,BrsMin)=='N')  ){
+
+			} else {
+
+				if((UP(P,NKolEff(P)-3,BrsMin+1)=='N')){
+
+				} else {
+
+					if((UP(P,NKolEff(P)-2,BrsMin+2)=='N')){
+
+					} else {
+
+						if((UP(P,NKolEff(P)-1,BrsMin+1)=='N')){
+
+						} else {
+							printf("Castle anda penuh semua!\n");
+							kondisiRekrutUnitBisa=false;
+						}
+					}
+
+				}
+			}
+		}else {
+			printf("King anda harus berada di tower!\n");
+			kondisiRekrutUnitBisa=false;
+		}
+
 	}
- }
+
+
+
+
+	if (kondisiRekrutUnitBisa)
+	{
+		printf("Masukan jenis unit yang ingin di rekrut.\n");
+		printf("1. Swordsman (200G)\n");
+		printf("2. Archer (200G)\n");
+		printf("3. White Mage (500G)\n");
+		printf("Masukan pilihan(integer):\n");
+
+		char jenisUnitRekrut[200];
+		int pilihanUnit;
+		scanf("%d", &pilihanUnit);
+
+		while (pilihanUnit<1 || pilihanUnit>3 )
+		{
+			printf("Masukan jenis unit anda masukan salah.\n");
+			printf("Masukan kembali jenis unit yang ingin di rekrut.\n");
+			printf("1. Swordsman (200G)\n");
+			printf("2. Archer (200G)\n");
+			printf("3. White Mage (500G)\n");
+			printf("Masukan pilihan(integer):\n");
+			scanf("%d", &pilihanUnit);
+		}
+
+		boolean GoldRekrutCukup = true;
+		if (pilihanUnit==1)
+		{
+			strcpy(jenisUnitRekrut,"Swordsman");
+			if ( Gold(*CurrentPlayer) <200 ) {
+				printf("Gold anda tidak cukup untuk melakukan rekrut unit ini!\n");
+				GoldRekrutCukup = false;
+			}
+		} else if (pilihanUnit==2){
+			strcpy(jenisUnitRekrut,"Archer");
+			if ( Gold(*CurrentPlayer) <200 ) {
+				printf("Gold anda tidak cukup untuk melakukan rekrut unit ini!\n");
+				GoldRekrutCukup = false;
+			}
+		} else {
+			strcpy(jenisUnitRekrut,"White Mage");
+			if ( Gold(*CurrentPlayer) <500 ) {
+				printf("Gold anda tidak cukup untuk melakukan rekrut unit ini!\n");
+				GoldRekrutCukup = false;
+			}
+		}
+		boolean bisaRekrutUnit = false;
+		POINT lokasiUnitDirekrut; // tergantung player 1/2
+		if (GoldRekrutCukup) {
+
+			if (Warna(*CurrentPlayer) == 1 )
+			{
+				if (UP(P,KolMin+1,NBrsEff(P)-2)=='K')
+				{
+					boolean castleDipilih = false;
+					while(castleDipilih == false){
+						printf("Pilih castle di mana unit akan direkrut!\n");
+						printf("1. Castle Utara\n");
+						printf("2. Castle Barat\n");
+						printf("3. Castle Selatan\n");
+						printf("4. Castle Timur\n");
+						printf("Masukan angka castle (1-4):\n");
+						int castleRekrut;
+						scanf("%d", &castleRekrut);
+						while(castleRekrut<1 || castleRekrut>4){
+							printf("Masukan anda salah! Masukan angka castle kembali.\n");
+							scanf("%d", &castleRekrut);
+						}
+
+						if((UP(P,KolMin+1,NBrsEff(P)-3)=='N') && castleRekrut==1 ){
+							lokasiUnitDirekrut = MakePOINT(KolMin+1,NBrsEff(P)-3);
+							bisaRekrutUnit = true;
+							castleDipilih = true;
+						} else {
+
+							if((UP(P,KolMin,NBrsEff(P)-2)=='N')&& castleRekrut==2){
+								lokasiUnitDirekrut = MakePOINT(KolMin,NBrsEff(P)-2);
+								bisaRekrutUnit = true;
+								castleDipilih = true;
+							} else {
+
+								if((UP(P,KolMin+1,NBrsEff(P)-1)=='N')&& castleRekrut==3){
+									lokasiUnitDirekrut = MakePOINT(KolMin+1,NBrsEff(P)-1);
+									bisaRekrutUnit = true;
+									castleDipilih = true;
+								} else {
+
+									if((UP(P,KolMin+2,NBrsEff(P)-2)=='N')&& castleRekrut==4){
+										lokasiUnitDirekrut = MakePOINT(KolMin+2,NBrsEff(P)-2);
+										bisaRekrutUnit = true;
+										castleDipilih = true;
+									} else {
+										printf("Castle anda penuh!\n");
+									}
+								}
+							}
+						}
+					}
+				}
+
+			} else {
+
+				if (UP(P,NKolEff(P)-2,BrsMin+1) =='K')
+				{
+					boolean castleDipilih = false;
+					while(castleDipilih == false){
+						printf("Pilih castle di mana unit akan direkrut!\n");
+						printf("Pilihan:\n");
+						printf("1. Castle Utara\n");
+						printf("2. Castle Barat\n");
+						printf("3. Castle Selatan\n");
+						printf("4. Castle Timur\n");
+						printf("Masukan angka castle (1-4):\n");
+						int castleRekrut;
+						scanf("%d", &castleRekrut);
+						while(castleRekrut<1 || castleRekrut>4){
+							printf("Masukan anda salah! Masukan angka castle kembali.\n");
+							scanf("%d", &castleRekrut);
+						}
+
+						if((UP(P,NKolEff(P)-2,BrsMin)=='N') && castleRekrut==1 ){
+							lokasiUnitDirekrut = MakePOINT(NKolEff(P)-2,BrsMin);
+							bisaRekrutUnit = true;
+							castleDipilih = true;
+						} else {
+
+							if((UP(P,NKolEff(P)-3,BrsMin+1)=='N')&& castleRekrut==2){
+								lokasiUnitDirekrut = MakePOINT(NKolEff(P)-3,BrsMin+1);
+								bisaRekrutUnit = true;
+								castleDipilih = true;
+							} else {
+
+								if((UP(P,NKolEff(P)-2,BrsMin+2)=='N')&& castleRekrut==3){
+									lokasiUnitDirekrut = MakePOINT(NKolEff(P)-2,BrsMin+2);
+									bisaRekrutUnit = true;
+									castleDipilih = true;
+								} else {
+
+									if((UP(P,NKolEff(P)-1,BrsMin+1)=='N')&& castleRekrut==4){
+										lokasiUnitDirekrut = MakePOINT(NKolEff(P)-1,BrsMin+1);
+										bisaRekrutUnit = true;
+										castleDipilih = true;
+									} else {
+										printf("Castle anda penuh!\n");
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (bisaRekrutUnit){
+			Unit RekrutUnit = CreateUnit(jenisUnitRekrut,lokasiUnitDirekrut);
+			Add_Unit_First(CurrentPlayer,RekrutUnit);
+			int hargaUnit = -1*Harga_Unit(RekrutUnit);
+			int upkeepUnit = UpkeepUnit(RekrutUnit);
+
+			Update_Gold(CurrentPlayer, hargaUnit);
+			Update_Upkeep(CurrentPlayer, upkeepUnit);
+			UpdatePETA(&P,P1,P2,Villages);
+			clrscr();
+			PrintPETA(P);
+			printf("Unit berhasil direkrut!\n");
+			
+		} else {
+			printf("Unit tidak berhasil direkrut.\n");
+		}
+	}
+
+
 }
 
 void Move(PETA M, Unit* CurrentUnit){
@@ -534,7 +559,6 @@ void clrscr()
 
 void Attack(Unit* Now, Player* Enemy){
 	addressUnit P = FirstUnit(UnitList(*Enemy));
-	printf("govlok");
 	Unit NearEnemyUnit[5];
 	int N=0;
 	boolean end = false;
@@ -622,4 +646,87 @@ void INFO(POINT temp){
 	else
 		printf("No unit there.\n");
 	printf("\n");
+}
+
+void HealWhiteMage(Player* P, PETA M){
+	for(int i=0; i<= NBrsEff(M); i++){
+		for(int j=0; j<=NKolEff(M); j++){
+			if(UP(M,i,j) == 'W'){
+				addressUnit whiteMage = SearchKoordinatUnit(UnitList(*P), MakePOINT(i,j));
+				// Looking for unit who will be healed
+				if(whiteMage != Nil){
+					for(int k = 0; k<=NBrsEff(M); k++){
+						for(int l = 0; l<=NKolEff(M); l++){
+							// checking whether exist adjacent unit or not
+							addressUnit adjacentUnit = SearchKoordinatUnit(UnitList(*P), MakePOINT(k,l));
+							if(adjacentUnit != Nil){
+								if(Panjang(Lokasi_Unit(InfoUnit(adjacentUnit)), Lokasi_Unit(InfoUnit(whiteMage))) == 1){
+									Unit temp = InfoUnit(adjacentUnit);
+									// pop adjacent unit
+									Del_Unit(P, temp);
+
+									// Heal
+									if(Health(temp)+7 > Max_Health(temp)){
+										Health(temp) = Max_Health(temp);
+									}
+									else {
+										Health(temp) += 7;
+									}
+
+									// Push adjacent unit back to player
+									if(!strcmp(Jenis_Unit(temp),"King"))
+										Add_Unit_First(P, temp);
+									else
+										Add_Unit_Last(P, temp);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV ){
+ 	int Baris = NBrsEff(*P);
+	int Kolom = NKolEff(*P);
+ 	UpdatePETA(P,*P1,*P2,LV);
+ 	for (int j = 0; j < Baris; ++j)
+ 	{
+		for (int i = 0; i < Kolom; ++i)
+  		{
+   			if (BP(*P,i,j)=='V')
+   			{
+    			if (UP(*P,i,j)!='N')
+    			{
+     				if (KUP(*P,i,j)==1)
+     				{
+      					addressUnit AdrUnitHeal = SearchKoordinatUnit (UnitList(*P1),MakePOINT(i,j));
+      					if (AdrUnitHeal!=Nil)
+      					{
+       						Health(InfoUnit(AdrUnitHeal))+=7;
+       						if (Health(InfoUnit(AdrUnitHeal)) > Max_Health(InfoUnit(AdrUnitHeal)))
+       						{
+        						Health(InfoUnit(AdrUnitHeal)) = Max_Health(InfoUnit(AdrUnitHeal));
+       						}
+      					}
+
+
+     				} else {
+      					addressUnit AdrUnitHeal = SearchKoordinatUnit (UnitList(*P2),MakePOINT(i,j));
+      					if (AdrUnitHeal!=Nil)
+      					{
+       						Health(InfoUnit(AdrUnitHeal))+=7;
+       						if (Health(InfoUnit(AdrUnitHeal)) > Max_Health(InfoUnit(AdrUnitHeal)))
+       						{
+        						Health(InfoUnit(AdrUnitHeal)) = Max_Health(InfoUnit(AdrUnitHeal));
+       						}
+
+      					}
+     				}
+    			}
+   			}
+  		}
+ 	}
 }

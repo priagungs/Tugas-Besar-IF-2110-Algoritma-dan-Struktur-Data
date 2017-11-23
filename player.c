@@ -6,13 +6,12 @@
 #include "player.h"
 
 void Make_Player(Player *Pl, int warna){
-	Gold(*Pl) = 1000;
+	Gold(*Pl) = 500;
 	Income(*Pl) = 100;
 	Upkeep(*Pl) = 50;
 	Warna(*Pl) = warna;
 	CreateEmptyVil(&VillageList(*Pl));
 	CreateEmptyUnit(&UnitList(*Pl));
-
 }
 
 void Update_Gold(Player *Pl, int Amount){
