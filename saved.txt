@@ -1,0 +1,35 @@
+SIZE8 8
+LISTOFVILLS
+PLAYER1
+1000
+100
+50
+1
+VILLAGE(S)
+UNIT(S)
+---
+King
+1 6
+100
+10
+1
+---
+Archer
+0 6
+40
+0
+1
+PLAYER2
+1000
+100
+50
+2
+VILLAGE(S)
+UNIT(S)
+---
+King
+6 1
+100
+10
+1
+END
