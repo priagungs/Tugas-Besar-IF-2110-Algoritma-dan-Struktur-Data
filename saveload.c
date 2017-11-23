@@ -1,27 +1,11 @@
 #include "saveload.h"
 
-void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
+void Save(int M, int N, Player P1, Player P2){
 	FILE *fsave;
 	fsave = fopen ("saved.txt","w");
 
 	/* Save ukuran matriks */
-	fprintf(fsave, "SIZE");
 	fprintf(fsave, "%d %d\n", M, N);
-
-	/* Save list villages */
-	fprintf(fsave, "LISTOFVILLS\n");
-	if (!IsEmptyVil(LVill)) {
-		addressVillage Pv = FirstVillage(LVill);
-		fprintf(fsave, "---\n");
-		fprintf(fsave, "%d %d\n", PosX(InfoVillage(Pv)), PosY(InfoVillage(Pv)));
-		fprintf(fsave, "%d\n", IncomeVil(InfoVillage(Pv)));
-		while(NextVillage(Pv) != FirstVillage(VillageList(P1))){
-			Pv = NextVillage(Pv);
-			fprintf(fsave, "---\n");
-			fprintf(fsave, "%d %d\n", PosX(InfoVillage(Pv)), PosY(InfoVillage(Pv)));
-			fprintf(fsave, "%d\n", IncomeVil(InfoVillage(Pv)));
-		}
-	}
 
 	/* Save Player 1 */
 	fprintf(fsave, "PLAYER1\n");
@@ -39,8 +23,8 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 		fprintf(fsave, "---\n");
 		fprintf(fsave, "%d %d\n", PosX(InfoVillage(Pv)), PosY(InfoVillage(Pv)));
 		fprintf(fsave, "%d\n", IncomeVil(InfoVillage(Pv)));
-		while(NextVillage(Pv) != FirstVillage(VillageList(P1))){
-			Pv = NextVillage(Pv);
+		while(NextVillage(Pv) != FirstVillage(L)){
+			P = NextVillage(Pv);
 			fprintf(fsave, "---\n");
 			fprintf(fsave, "%d %d\n", PosX(InfoVillage(Pv)), PosY(InfoVillage(Pv)));
 			fprintf(fsave, "%d\n", IncomeVil(InfoVillage(Pv)));
@@ -49,14 +33,14 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 
 	/* Daftar Unit */
 	fprintf(fsave, "UNIT(S)\n");
-	addressUnit Pu = FirstUnit(UnitList(P1));
+	addressUnit Pu = FirstUnit(VillageList(P1));
 	fprintf(fsave, "---\n");
 	fprintf(fsave, "%s\n", Jenis_Unit(InfoUnit(Pu)));
 	fprintf(fsave, "%d %d\n", Absis(Lokasi_Unit(InfoUnit(Pu))), Ordinat(Lokasi_Unit(InfoUnit(Pu))));
 	fprintf(fsave, "%d\n", Health(InfoUnit(Pu)));;
 	fprintf(fsave, "%d\n", Movement_Point(InfoUnit(Pu)));
 	fprintf(fsave, "%d\n", Kesempatan_Serangan(InfoUnit(Pu)));
-	while(NextUnit(Pu) != FirstUnit(UnitList(P1))) {
+	while(NextUnit(Pu) != FirstUnit(Pu)){
 		Pu = NextUnit(Pu);
 		fprintf(fsave, "---\n");
 		fprintf(fsave, "%s\n", Jenis_Unit(InfoUnit(Pu)));
@@ -65,6 +49,7 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 		fprintf(fsave, "%d\n", Movement_Point(InfoUnit(Pu)));
 		fprintf(fsave, "%d\n", Kesempatan_Serangan(InfoUnit(Pu)));
 	}
+	fprintf(fsave, "ENDOFP1\n");
 
 	/* Save Player 2 */
 	fprintf(fsave, "PLAYER2\n");
@@ -82,8 +67,8 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 		fprintf(fsave, "---\n");
 		fprintf(fsave, "%d %d\n", PosX(InfoVillage(Pv)), PosY(InfoVillage(Pv)));
 		fprintf(fsave, "%d\n", IncomeVil(InfoVillage(Pv)));
-		while(NextVillage(Pv) != FirstVillage(VillageList(P2))){
-			Pv = NextVillage(Pv);
+		while(NextVillage(Pv) != FirstVillage(L)){
+			P = NextVillage(Pv);
 			fprintf(fsave, "---\n");
 			fprintf(fsave, "%d %d\n", PosX(InfoVillage(Pv)), PosY(InfoVillage(Pv)));
 			fprintf(fsave, "%d\n", IncomeVil(InfoVillage(Pv)));
@@ -92,14 +77,14 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 
 	/* Daftar Unit */
 	fprintf(fsave, "UNIT(S)\n");
-	Pu = FirstUnit(UnitList(P2));
+	addressUnit Pu = FirstUnit(VillageList(P2));
 	fprintf(fsave, "---\n");
 	fprintf(fsave, "%s\n", Jenis_Unit(InfoUnit(Pu)));
 	fprintf(fsave, "%d %d\n", Absis(Lokasi_Unit(InfoUnit(Pu))), Ordinat(Lokasi_Unit(InfoUnit(Pu))));
-	fprintf(fsave, "%d\n", Health(InfoUnit(Pu)));
+	fprintf(fsave, "%d\n", Health(InfoUnit(Pu)));;
 	fprintf(fsave, "%d\n", Movement_Point(InfoUnit(Pu)));
 	fprintf(fsave, "%d\n", Kesempatan_Serangan(InfoUnit(Pu)));
-	while(NextUnit(Pu) != FirstUnit(UnitList(P2))){
+	while(NextUnit(Pu) != FirstUnit(Pu)){
 		Pu = NextUnit(Pu);
 		fprintf(fsave, "---\n");
 		fprintf(fsave, "%s\n", Jenis_Unit(InfoUnit(Pu)));
@@ -108,11 +93,11 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 		fprintf(fsave, "%d\n", Movement_Point(InfoUnit(Pu)));
 		fprintf(fsave, "%d\n", Kesempatan_Serangan(InfoUnit(Pu)));
 	}
-	fprintf(fsave, "END\n");
+	fprintf(fsave, "ENDOFP2\n");
 	fclose(fsave);
 }
 
-void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
+void Load(int *M, int *N, Player *P1, Player *P2){
 	FILE *fsave;
 	fsave = fopen ("saved.txt","r");
 	char Temp[200];
@@ -147,13 +132,13 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	fscanf(fsave, "%s", &Temp);
 	fscanf(fsave, "%s", &Temp);
 
-	if (strcmp(Temp,"UNIT(S)")!=0){
+	if (strcmp(Temp,"UNIT(S)"!=0)){
 		fscanf(fsave, "%d %d", &x, &y);
 		fscanf(fsave, "%d", &inc);
 		MakeVillage(&V, x, y, inc);
 		Add_Village(P1, V);
 		fscanf(fsave, "%s", &Temp);
-		while(strcmp(Temp,"UNIT(S)")!=0){
+		while(strcmp(Temp,"UNIT(S)"!=0)){
 			fscanf(fsave, "%d %d", &x, &y);
 			fscanf(fsave, "%d", &inc);
 			MakeVillage(&V, x, y, inc);
@@ -169,9 +154,9 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	fscanf(fsave, "%d", &Health(U));
 	fscanf(fsave, "%d", &Movement_Point(U));
 	fscanf(fsave, "%d", &Kesempatan_Serangan(U));
-	Add_Unit_First(P1,U);
-	fscanf(fsave, "%s", &Temp);
-	while (strcmp(Temp,"ENDOFP1")!=0){
+	Add_Unit(P1,U);
+	fscanf(fsave, "%s", &Temp)
+	while (strcmp(Temp,"ENDOFP1"!=0)){
 		fscanf(fsave, "%s", &Temp);
 		fscanf(fsave, "%s", &Jenis);
 		fscanf(fsave, "%d %d", &i, &j);
@@ -179,8 +164,8 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 		fscanf(fsave, "%d", &Health(U));
 		fscanf(fsave, "%d", &Movement_Point(U));
 		fscanf(fsave, "%d", &Kesempatan_Serangan(U));
-		Add_Unit_Last(P1,U);
-		fscanf(fsave, "%s", &Temp);
+		Add_Unit(P1,U);
+		fscanf(fsave, "%s", &Temp)
 	}
 
 	/* LOAD PLAYER 2 */
@@ -201,13 +186,13 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	fscanf(fsave, "%s", &Temp);
 	fscanf(fsave, "%s", &Temp);
 
-	if (strcmp(Temp,"UNIT(S)")!=0){
+	if (strcmp(Temp,"UNIT(S)"!=0)){
 		fscanf(fsave, "%d %d", &x, &y);
 		fscanf(fsave, "%d", &inc);
 		MakeVillage(&V, x, y, inc);
 		Add_Village(P2, V);
 		fscanf(fsave, "%s", &Temp);
-		while(strcmp(Temp,"UNIT(S)")!=0){
+		while(strcmp(Temp,"UNIT(S)"!=0)){
 			fscanf(fsave, "%d %d", &x, &y);
 			fscanf(fsave, "%d", &inc);
 			MakeVillage(&V, x, y, inc);
@@ -223,9 +208,9 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	fscanf(fsave, "%d", &Health(U));
 	fscanf(fsave, "%d", &Movement_Point(U));
 	fscanf(fsave, "%d", &Kesempatan_Serangan(U));
-	Add_Unit_First(P2,U);
-	fscanf(fsave, "%s", &Temp);
-	while (strcmp(Temp,"ENDOFP2")!=0){
+	Add_Unit(P2,U);
+	fscanf(fsave, "%s", &Temp)
+	while (strcmp(Temp,"ENDOFP2"!=0)){
 		fscanf(fsave, "%s", &Temp);
 		fscanf(fsave, "%s", &Jenis);
 		fscanf(fsave, "%d %d", &i, &j);
@@ -233,8 +218,8 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 		fscanf(fsave, "%d", &Health(U));
 		fscanf(fsave, "%d", &Movement_Point(U));
 		fscanf(fsave, "%d", &Kesempatan_Serangan(U));
-		Add_Unit_Last(P2,U);
-		fscanf(fsave, "%s", &Temp);
+		Add_Unit(P2,U);
+		fscanf(fsave, "%s", &Temp)
 	}
 	fclose(fsave);
 }

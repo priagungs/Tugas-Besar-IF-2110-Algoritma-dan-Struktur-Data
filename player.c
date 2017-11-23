@@ -48,7 +48,6 @@ void Add_Unit_Last(Player *Pl, Unit U){
 void Del_Unit(Player *Pl, Unit U){
 // menghapus U pada list of unit di player
 	Unit temp;
-	PrintListUnit(UnitList(*Pl));
 	DelKoordinatUnit (&UnitList(*Pl), Lokasi_Unit(U), &temp);
 	Update_Upkeep(Pl,-1*UpkeepUnit(U));
 }

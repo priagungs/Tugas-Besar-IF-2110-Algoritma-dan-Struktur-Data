@@ -55,6 +55,7 @@ void DealokasiUnit (addressUnit P);
 /****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
 addressUnit SearchKoordinatUnit (ListUnit L, POINT Koordinat);
 
+boolean IsKingDead(ListUnit L);
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
 /*** PENAMBAHAN ELEMEN ***/
 void InsUnitFirst (ListUnit *L, Unit X);
@@ -109,5 +110,4 @@ void DelKoordinatUnit (ListUnit *L, POINT Koordinat, Unit *X);
 void PrintListUnit(ListUnit L);
 Unit SearchNomor( ListUnit L, int nomor);
 void ResetMovementPoint(ListUnit *L);
-void ResetAttackChance(ListUnit *L);
 #endif

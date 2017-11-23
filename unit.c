@@ -5,7 +5,6 @@
 #include <string.h>
 #include <time.h>
 
-// PROTOTIPE PRIMITIF
 Unit CreateUnit(char* jenis, POINT Lokasi)
 // menghasilkan sebuah Unit dengan jenis = 'jenis'
 {
@@ -175,11 +174,11 @@ boolean CanUnitAttack(Unit U1, Unit U2)
 }
 
 void PrintUnit( Unit U){
-  printf("Position : (%d,%d)\n",Absis(Lokasi_Unit(U)),Ordinat(Lokasi_Unit(U)));
-  printf("Health : %d/%d\n", Health(U), Max_Health(U));
-  printf("Damage : %d\n",Attack_Damage(U));
-  printf("Movement Point: %d\n",Movement_Point(U));
-  printf("Chance of Attack : ");
+  printf("  Position : (%d,%d)  |",Absis(Lokasi_Unit(U)),Ordinat(Lokasi_Unit(U)));
+  printf("  Health : %d/%d  |", Health(U), Max_Health(U));
+  printf("  Damage : %d  |",Attack_Damage(U));
+  printf("  Movement Point: %d  |",Movement_Point(U));
+  printf("  Chance of Attack : ");
   if(Kesempatan_Serangan(U)){
     printf("Yes\n");
   }else{

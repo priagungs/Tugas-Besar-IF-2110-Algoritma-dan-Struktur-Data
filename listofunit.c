@@ -6,6 +6,7 @@
 
 #include "listofunit.h"
 #include "unit.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -43,7 +44,8 @@ addressUnit AlokasiUnit (Unit X){
 		Movement_Point(InfoUnit(P)) = Movement_Point(X);
 		Tipe_Serangan(InfoUnit(P)) = Tipe_Serangan(X);
 		Kesempatan_Serangan(InfoUnit(P)) = Kesempatan_Serangan(X);
-		Lokasi_Unit(InfoUnit(P)) = Lokasi_Unit(X);
+		Absis(Lokasi_Unit(InfoUnit(P))) = Absis(Lokasi_Unit(X));
+		Ordinat(Lokasi_Unit(InfoUnit(P))) = Ordinat(Lokasi_Unit(X));
 		Harga_Unit(InfoUnit(P)) = Harga_Unit(X);
 		NextUnit(P) = Nil;
 		return P;
@@ -60,19 +62,16 @@ void DealokasiUnit (addressUnit P){
 /****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
 addressUnit SearchKoordinatUnit (ListUnit L, POINT Koordinat){
 	addressUnit P;
-	if (IsEmptyUnit(L)) {
-		return Nil;
-	} else {
-		P = FirstUnit(L);
-		while ((NextUnit(P) != FirstUnit(L)) && ((Absis(Lokasi_Unit(InfoUnit(P))) != Absis(Koordinat)) && (Ordinat(Lokasi_Unit(InfoUnit(P))) != Ordinat(Koordinat)))) {
+	P = FirstUnit(L);
+	if(P != Nil){
+		do{
+			if(((Absis(Lokasi_Unit(InfoUnit(P))) == Absis(Koordinat)) && (Ordinat(Lokasi_Unit(InfoUnit(P))) == Ordinat(Koordinat)))){
+				return P;
+			}
 			P = NextUnit(P);
-		}
-		if ((Absis(Lokasi_Unit(InfoUnit(P))) == Absis(Koordinat)) && (Ordinat(Lokasi_Unit(InfoUnit(P))) == Ordinat(Koordinat))){
-			return P;
-		} else {
-			return Nil;
-		}
+		} while (P != FirstUnit(L));
 	}
+	return Nil;	
 }
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
@@ -242,13 +241,13 @@ void PrintListUnit(ListUnit L){
 	if(!IsEmptyUnit(L)){
 		addressUnit P = FirstUnit(L);
 		while(NextUnit(P) != FirstUnit(L)){
-			printf("%d. %s\n",cnt, Jenis_Unit(InfoUnit(P)));
+			printf("%d. %s  |",cnt, Jenis_Unit(InfoUnit(P)));
 			PrintUnit(InfoUnit(P));
 			P = NextUnit(P);
 			cnt++;
 			printf("\n");
 		}
-		printf("%d. %s\n", cnt, Jenis_Unit(InfoUnit(P)));
+		printf("%d. %s  |", cnt, Jenis_Unit(InfoUnit(P)));
 		PrintUnit(InfoUnit(P));
 		printf("\n");
 	}
@@ -277,13 +276,15 @@ void ResetMovementPoint(ListUnit *L){
 	}
 }
 
-void ResetAttackChance(ListUnit *L){
-	addressUnit P = FirstUnit(*L);
-	if(P != Nil){
-		do {
-			Kesempatan_Serangan(InfoUnit(P)) = true;
+boolean IsKingDead(ListUnit L){
+	addressUnit P = FirstUnit(L);
+	if(!IsEmptyUnit(L)){
+		do{
+			if(!strcmp(Jenis_Unit(InfoUnit(P)), "King")){
+				return false;
+			}
 			P = NextUnit(P);
-		} while(P != FirstUnit(*L));
-
+		}while(P != FirstUnit(L));
 	}
+	return true;
 }

@@ -59,16 +59,15 @@ addressVillage SearchKoordinatVil (ListVil L, POINT Koordinat){
 		P = FirstVillage(L);
 		while (NextVillage(P) != FirstVillage(L) && !found) {
 			if((PosX(InfoVillage(P))) == Absis(Koordinat) && PosY(InfoVillage(P)) == Ordinat(Koordinat)){
-				found = true;
+				return P;
 			}
 			else {
 				P = NextVillage(P);
 			}
 		}
-		if (found){
+		if ((PosX(InfoVillage(P))) == Absis(Koordinat) && PosY(InfoVillage(P)) == Ordinat(Koordinat)){
 			return P;
 		} else {
-			printf("sdasd");
 			return Nil;
 		}
 	}

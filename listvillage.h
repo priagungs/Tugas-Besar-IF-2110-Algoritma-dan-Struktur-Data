@@ -1,7 +1,3 @@
-/* File: listvillage.h */
-/* Tanggal: 11 November 2017 */
-/* made by : rwk03 */
-
 #ifndef Listvillage_H
 #define Listvillage_H
 
