@@ -14,11 +14,11 @@ Unit CreateUnit(char* jenis, POINT Lokasi)
     // Dibawah ini bisa disesuaikan angka angka nya
     Max_Health(U) = 100;
     Attack_Damage(U) = 40;
-    Max_Movement_Point(U) = 1;
+    Max_Movement_Point(U) = 10;
     Harga_Unit(U) = 0;
     UpkeepUnit(U) = 0;
     Health(U) = Max_Health(U);
-    Movement_Point(U) = 1;
+    Movement_Point(U) = 10;
     Tipe_Serangan(U) = "Melee";
     Kesempatan_Serangan(U) = true;
     Lokasi_Unit(U) = Lokasi;
@@ -163,13 +163,11 @@ boolean CanUnitMoveTo(Unit U, POINT P)
 boolean CanUnitAttack(Unit U1, Unit U2)
 // true jika unit U1 dapat menyerang unit U2
 {
-  POINT P1 = Lokasi_Unit(U1), P2 = Lokasi_Unit(U2);
-
-  if(  (Absis(P1) != Absis(P2) && Ordinat(P1) != Ordinat(P2) )|| !Kesempatan_Serangan(U1)){
-    return false;
+  if(Kesempatan_Serangan(U1) && Panjang(Lokasi_Unit(U1), Lokasi_Unit(U2)) == 1){
+      return true;
   }
   else {
-    return true;
+      return false;
   }
 }
 

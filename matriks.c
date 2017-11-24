@@ -409,31 +409,5 @@ boolean NoObstacle(Unit U, POINT P, PETA M){
       }
     }
   }
-
-  // // diagonal
-  // else if((Absis(P) - Absis(Lokasi_Unit(U))) > 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) > 0){
-  //   for(int i = 1; i < abs(Ordinat(P)-Ordinat(Lokasi_Unit(U))); i++){
-  //     if((Absis(P) - Absis(Lokasi_Unit(U))) > 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) > 0){
-  //       if(KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))+i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))+i) != 0){
-  //         return false;
-  //       }
-  //     }
-  //     else if((Absis(P) - Absis(Lokasi_Unit(U))) > 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) < 0){
-  //       if(KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))-i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))+i, Ordinat(Lokasi_Unit(U))-i) != 0){
-  //         return false;
-  //       }
-  //     }
-  //     else if((Absis(P) - Absis(Lokasi_Unit(U))) < 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) > 0){
-  //       if(KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))+i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))+i) != 0){
-  //         return false;
-  //       }
-  //     }
-  //     else if((Absis(P) - Absis(Lokasi_Unit(U))) < 0 && (Ordinat(P) - Ordinat(Lokasi_Unit(U))) < 0){
-  //       if(KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))-i) != KUP(M, Absis(Lokasi_Unit(U)), Ordinat(Lokasi_Unit(U))) && KUP(M, Absis(Lokasi_Unit(U))-i, Ordinat(Lokasi_Unit(U))-i) != 0){
-  //         return false;
-  //       }
-  //     }
-  //   }
-  // }
   return noObstacle;
 }

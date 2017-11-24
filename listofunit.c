@@ -71,7 +71,7 @@ addressUnit SearchKoordinatUnit (ListUnit L, POINT Koordinat){
 			P = NextUnit(P);
 		} while (P != FirstUnit(L));
 	}
-	return Nil;	
+	return Nil;
 }
 
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
@@ -287,4 +287,13 @@ boolean IsKingDead(ListUnit L){
 		}while(P != FirstUnit(L));
 	}
 	return true;
+}
+
+void ResetAttackChance(ListUnit *L){
+	addressUnit P = FirstUnit(*L);
+	if(P != Nil){
+		do{
+			Kesempatan_Serangan(InfoUnit(P)) = true;
+		}while(P != FirstUnit(*L));
+	}
 }

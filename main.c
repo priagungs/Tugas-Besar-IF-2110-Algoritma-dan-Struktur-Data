@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "point.h"
+#include "saveload.h"
+#include "listofunit.h"
 
 int NB,NK,IndeksUnit;
 char Str[15];
@@ -16,6 +18,8 @@ Player *CurrentPlayer;
 ListVil Villages;
 StackPlayer SP;
 int turn=1;
+Unit Now;
+boolean endgame = false;
 
 
 PETA P;
@@ -35,26 +39,51 @@ void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV );
 
 int main(){
 	clrscr();
-	Make_Player(&P1,1);
-	Make_Player(&P2,2);
-	CreateEmptyVil(&Villages);
+	int choice;
+	printf("1. New Game\n2. Load Game\nInput : ");
+	scanf("%d", &choice);
+	while(choice != 1 && choice != 2){
+		printf("Input Unknown\n");
+		printf("1. New Game\n2. Load Game\nInput : ");
+		scanf("%d", &choice);
+	}
 
-	printf("JUDUL\n");
-	printf("Masukkan input besar peta (KOLOM,BARIS)\n");
-	scanf("%d %d", &NK,&NB);
+	if(choice == 1){
+		clrscr();
 
-	MakePETA(NK,NB,&P);
+/* 		========= Create New game =========		*/
+		Make_Player(&P1,1);
+		Make_Player(&P2,2);
+		CreateEmptyVil(&Villages);
 
-	Unit Now = CreateUnit("King",MakePOINT(NK-2,BrsMin+1));
-	InsUnitFirst(&UnitList(P2),Now);
+		printf("JUDUL\n");
+		printf("Masukkan input besar peta (KOLOM,BARIS)\n");
+		scanf("%d %d", &NK,&NB);
+		if(NK < 8 && NB <8){
+			printf("Map are too little!\n");
+			printf("Masukkan input besar peta (KOLOM,BARIS)\n");
+			scanf("%d %d", &NK,&NB);
+		}
 
-	Now = CreateUnit("King",MakePOINT(KolMin+1,NB-2));
-	InsUnitFirst(&UnitList(P1),Now);
+		Now = CreateUnit("King",MakePOINT(NK-2,BrsMin+1));
+		InsUnitFirst(&UnitList(P2),Now);
 
-	RandomVillage(&Villages,10,NK,NB,&P);
+		Now = CreateUnit("King",MakePOINT(KolMin+1,NB-2));
+		InsUnitFirst(&UnitList(P1),Now);
+		MakePETA(NK,NB,&P);
+		UpdatePETA(&P,P1,P2,Villages);
+		RandomVillage(&Villages,10,NK,NB,&P);
+	}
+	else if (choice == 2){
+		clrscr();
+
+		Load(&NK, &NB, &P1, &P2, &Villages);
+		Now = InfoUnit(FirstUnit(UnitList(P1)));
+		MakePETA(NK,NB,&P);
+		UpdatePETA(&P,P1,P2,Villages);
+	}
+
 	CurrentPlayer = &P1;
-
-	UpdatePETA(&P,P1,P2,Villages);
 	IndeksUnit = 2;
 
 	clrscr();
@@ -180,17 +209,23 @@ int main(){
 				}
 			}
 			else {
-				strcpy(Str, "NEXT_UNIT");
+				Update_Upkeep(CurrentPlayer, -1*UpkeepUnit(Now));
+				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
 			}
 
 			if(IsKingDead(UnitList(P1))){
 				printf("Player 2 Win!\n");
+				endgame=true;
 				break;
 			}
 			else if(IsKingDead(UnitList(P2))) {
 				printf("Player 1 Win!\n");
+				endgame=true;
 				break;
 			}
+
+			UpdatePETA(&P,P1,P2,Villages);
+
 		}
 
 		else if(!strcmp(Str,"MAP")){
@@ -222,16 +257,21 @@ int main(){
 				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
 				turn++;
 			}
+			ResetAttackChance(&UnitList(P1));
+			ResetAttackChance(&UnitList(P2));
 			IndeksUnit = 2;
 			clrscr();
 			PrintPETA(P);
 			HealWhiteMage(&P1, P);
 			HealWhiteMage(&P2, P);
 			HealVillage(&P, &P1, &P2, Villages);
+
 		}
 
 		else if(!strcmp(Str,"SAVE")){
 			ClearStack(&SP);
+			clrscr();
+			Save(NK, NB, P1, P2, Villages);
 		}
 		else{
 			if(strcmp(Str,"EXIT")){
@@ -242,6 +282,15 @@ int main(){
 		}
 
 	}while(strcmp(Str,"EXIT"));
+	if(!endgame){
+		printf("Do you want to save your game ? (y/n)\n");
+		char c;
+		scanf(" %c", &c);
+		if(c == 'y'){
+			clrscr();
+			Save(NK, NB, P1, P2, Villages);
+		}
+	}
 	ClearStack(&SP);
 }
 
@@ -473,7 +522,7 @@ void RekrutUnit(void){
 
 		if (bisaRekrutUnit){
 			Unit RekrutUnit = CreateUnit(jenisUnitRekrut,lokasiUnitDirekrut);
-			Add_Unit_First(CurrentPlayer,RekrutUnit);
+			Add_Unit_Last(CurrentPlayer,RekrutUnit);
 			int hargaUnit = -1*Harga_Unit(RekrutUnit);
 			int upkeepUnit = UpkeepUnit(RekrutUnit);
 
@@ -483,7 +532,7 @@ void RekrutUnit(void){
 			clrscr();
 			PrintPETA(P);
 			printf("Unit berhasil direkrut!\n");
-			
+
 		} else {
 			printf("Unit tidak berhasil direkrut.\n");
 		}
@@ -580,7 +629,7 @@ void Attack(Unit* Now, Player* Enemy){
 		// print enemy unit that ready to be attacked
 		printf("Please select enemy you want to attack : \n");
 		for(int i=1; i<=N; i++){
-			if(!strcmp(Tipe_Serangan(NearEnemyUnit[i]), Tipe_Serangan(*Now))){
+			if(!strcmp(Tipe_Serangan(NearEnemyUnit[i]), Tipe_Serangan(*Now)) || !strcmp(Jenis_Unit(NearEnemyUnit[i]), "King")){
 				printf("%d. %s (%d,%d) | Health %d/%d (Retaliates)\n",
 					i,
 					Jenis_Unit(NearEnemyUnit[i]),
@@ -617,6 +666,9 @@ void Attack(Unit* Now, Player* Enemy){
 			else {
 				InsUnitLast(&UnitList(*Enemy), NearEnemyUnit[i]);
 			}
+		}
+		else {
+			Update_Upkeep(Enemy, -1*UpkeepUnit(NearEnemyUnit[i]));
 		}
 	}
 }
