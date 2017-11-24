@@ -113,6 +113,7 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 	}
 	fprintf(fsave, "END\n");
 	fclose(fsave);
+	printf("The Game has been successfully saved.\n");
 }
 
 void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
