@@ -1,12 +1,12 @@
 /*#include "jam.h"*/
-#include "stackofplayer.h"
+#include "stackofpoint.h"
 #include "listvillage.h"
 #include "matriks.h"
 #include "player.h"
+#include "mesinkata.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "point.h"
 #include "saveload.h"
 #include "listofunit.h"
 
@@ -16,10 +16,12 @@ Player P1;
 Player P2;
 Player *CurrentPlayer;
 ListVil Villages;
-StackPlayer SP;
+StackPoint SP;
 int turn=1;
 Unit Now;
 boolean endgame = false;
+FILE *pitaa;
+infotypeU history;
 
 
 PETA P;
@@ -29,11 +31,11 @@ PETA P;
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
 void Move(PETA M, Unit* CurrentUnit);
-void ClearStack(StackPlayer *SP);
+void ClearStack(StackPoint *SP);
 void RekrutUnit(void);
 void clrscr();
 void INFO(POINT temp);
-Player Undo(StackPlayer SP);
+infotypeU Undo(StackPoint SP);
 void HealWhiteMage(Player* P, PETA M);
 void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV );
 
@@ -94,12 +96,21 @@ int main(){
 		PrintPlayerStatus(*CurrentPlayer,Now);
 		printf("Your Input: ");
 		scanf("%s",Str);
+		pitaa = fopen("pitakar.txt","w");
+		fprintf(pitaa,"%s .",Str);
+		fclose(pitaa);
+		memset(&CKata.TabKata[0], 0, sizeof(CKata.TabKata));
+		STARTKATA();
+		printf("%s\n",CKata.TabKata);
 
-		if(!strcmp(Str,"MOVE")){
+		if(!strcmp(CKata.TabKata,"MOVE")){
+			//menulis history untuk undo
+			history.Pt = Lokasi_Unit(Now);
+			history.mp = Movement_Point(Now);
+			PushPoint(&SP,history);
 			//pop current unit from list of unit
 			if(Movement_Point(Now) != 0){
 				Del_Unit(CurrentPlayer, Now);
-				Push(&SP,*CurrentPlayer);
 				Move(P, &Now);
 				//push moved current unit to list of unit
 
@@ -108,6 +119,7 @@ int main(){
 						Movement_Point(Now) = 0;
 						addressVillage V = SearchKoordinatVil(Villages, Lokasi_Unit(Now));
 						Add_Village(CurrentPlayer, InfoVillage(V));
+						ClearStack(&SP);
 					}
 					else{
 						if(CurrentPlayer == &P1){
@@ -132,7 +144,7 @@ int main(){
 				if(!strcmp(Jenis_Unit(Now),"King"))
 					Add_Unit_First(CurrentPlayer, Now);
 				else
-					Add_Unit_Last(CurrentPlayer, Now);
+				Add_Unit_Last(CurrentPlayer, Now);
 				UpdatePETA(&P,P1,P2,Villages);
 				clrscr();
 				PrintPETA(P);
@@ -143,15 +155,29 @@ int main(){
 
 		}
 
-		else if(!strcmp(Str,"UNDO")){
-			if(!IsEmpty(SP)){
-				*CurrentPlayer = Undo(SP);
+
+		else if(!strcmp(CKata.TabKata,"UNDO")){
+			if(!IsEmptyPointStack(SP)){
+				infotypeU old;
+				PopPoint(&SP,&old);
+				Del_Unit(CurrentPlayer,Now);
+				Unit oldUnit = CreateUnit(Jenis_Unit(Now),old.Pt);
+				Movement_Point(oldUnit) = old.mp;
+				InsUnitLast(&UnitList(*CurrentPlayer),oldUnit);
+				Now = oldUnit;
+				clrscr();
+				UpdatePETA(&P,P1,P2,Villages);
+				PrintPETA(P);
 			}else{
+				clrscr();
+				UpdatePETA(&P,P1,P2,Villages);
+				PrintPETA(P);
 				printf("You cannot undo!\n");
 			}
 		}
 
-		else if(!strcmp(Str,"CHANGE_UNIT")){
+
+		else if(!strcmp(CKata.TabKata,"CHANGE_UNIT")){
 			int nomor;
 			printf("============= YOUR UNITS =============\n");
 			PrintListUnit(UnitList(*CurrentPlayer));
@@ -160,10 +186,11 @@ int main(){
 			IndeksUnit = nomor+1;
 			Now = SearchNomor(UnitList(*CurrentPlayer),nomor);
 			printf("Your current unit is %s\n",Jenis_Unit(Now));
-
 		}
 
-		else if(!strcmp(Str,"NEXT_UNIT")){
+
+
+		else if(!strcmp(CKata.TabKata,"NEXT_UNIT")){
 			boolean ada = false;
 			Next_Unit(*CurrentPlayer, &IndeksUnit, &Now, &ada);
 			if(!ada){
@@ -174,8 +201,7 @@ int main(){
 				IndeksUnit++;
 			}
 		}
-
-		else if(!strcmp(Str,"RECRUIT")){
+		else if(!strcmp(CKata.TabKata,"RECRUIT")){
 			//Cek unit yang mencoba rekrut
 		 //Cek unit yang mencoba rekrut
 		   if (!strcmp(Jenis_Unit(Now),"King"))
@@ -184,10 +210,11 @@ int main(){
 		    RekrutUnit();
 		   } else {
 		    printf("Rekrut unit hanya dapat dilakukan oleh king!\n");
-		   }
+			}
 		}
 
-		else if(!strcmp(Str,"ATTACK")){
+
+		else if(!strcmp(CKata.TabKata,"ATTACK")){
 			ClearStack(&SP);
 			//pop current unit from list of unit
 			DelKoordinatUnit(&UnitList(*CurrentPlayer), Lokasi_Unit(Now), &Now);
@@ -197,7 +224,6 @@ int main(){
 			else {
 				Attack(&Now, &P1);
 			}
-
 
 			//push moved current unit to list of unit
 			if(Health(Now) != 0){
@@ -228,12 +254,13 @@ int main(){
 
 		}
 
-		else if(!strcmp(Str,"MAP")){
+
+		else if(!strcmp(CKata.TabKata,"MAP")){
 			UpdatePETA(&P,P1,P2,Villages);
 			PrintPETA(P);
 		}
 
-		else if(!strcmp(Str,"INFO")){
+		else if(!strcmp(CKata.TabKata,"INFO")){
 			int x , y;
 			printf("Enter the coordinate of the cell you want to see : ");
 			scanf("%d%d",&x,&y);
@@ -243,7 +270,8 @@ int main(){
 			INFO(temp);
 		}
 
-		else if(!strcmp(Str,"END_TURN")){
+
+		else if(!strcmp(CKata.TabKata,"END_TURN")){
 			ClearStack(&SP);
 			Update_Turn(CurrentPlayer);
 			if(turn%2){
@@ -268,20 +296,23 @@ int main(){
 
 		}
 
-		else if(!strcmp(Str,"SAVE")){
+
+		else if(!strcmp(CKata.TabKata,"SAVE")){
 			ClearStack(&SP);
 			clrscr();
 			Save(NK, NB, P1, P2, Villages);
 		}
+
+
 		else{
-			if(strcmp(Str,"EXIT")){
+			if(strcmp(CKata.TabKata,"EXIT")){
 				clrscr();
 				PrintPETA(P);
 				printf("No command found!\n");
 			}
 		}
 
-	}while(strcmp(Str,"EXIT"));
+	}while(strcmp(CKata.TabKata,"EXIT"));
 	if(!endgame){
 		printf("Do you want to save your game ? (y/n)\n");
 		char c;
@@ -293,7 +324,6 @@ int main(){
 	}
 	ClearStack(&SP);
 }
-
 
 void RekrutUnit(void){
 	//Cek castle tidak penuh!
@@ -537,8 +567,6 @@ void RekrutUnit(void){
 			printf("Unit tidak berhasil direkrut.\n");
 		}
 	}
-
-
 }
 
 void Move(PETA M, Unit* CurrentUnit){
@@ -589,16 +617,17 @@ void PrintPlayerStatus(Player PlayerTemp,Unit U){
 	}
 }
 
-Player Undo(StackPlayer SP){
-	Player Temp;
-	Pop(&SP,&Temp);
+infotypeU Undo(StackPoint SP){
+	infotypeU Temp;
+	PopPoint(&SP,&Temp);
 	return Temp;
 }
 
-void ClearStack(StackPlayer *SP){
-	infotype temp;
-	while(!IsEmpty(*SP))
-		Pop(SP,&temp);
+void ClearStack(StackPoint *SP){
+	infotypeU temp;
+	while(!IsEmptyPointStack(*SP)){
+		PopPoint(SP,&temp);
+	}
 }
 
 void clrscr()
