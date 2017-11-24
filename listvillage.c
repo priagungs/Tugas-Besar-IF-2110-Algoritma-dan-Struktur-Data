@@ -52,19 +52,24 @@ addressVillage SearchVil (ListVil L, Village X)
 
 addressVillage SearchKoordinatVil (ListVil L, POINT Koordinat){
 	addressVillage P;
+	boolean found = false;
 	if (IsEmptyVil(L)) {
 		return Nil;
 	} else {
 		P = FirstVillage(L);
-		do {
+		while (NextVillage(P) != FirstVillage(L) && !found) {
 			if((PosX(InfoVillage(P))) == Absis(Koordinat) && PosY(InfoVillage(P)) == Ordinat(Koordinat)){
 				return P;
 			}
 			else {
 				P = NextVillage(P);
 			}
-		} while(P != FirstVillage(L));
-		return Nil;
+		}
+		if ((PosX(InfoVillage(P))) == Absis(Koordinat) && PosY(InfoVillage(P)) == Ordinat(Koordinat)){
+			return P;
+		} else {
+			return Nil;
+		}
 	}
 }
 
