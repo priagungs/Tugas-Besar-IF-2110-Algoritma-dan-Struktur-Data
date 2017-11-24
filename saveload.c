@@ -142,20 +142,20 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 
 	/* ALGORITMA */
 	/* Load ukuran matriks */
-	fscanf(fsave, "%s", Temp);
+	fscanf(fsave, "%s", &Temp);
 	fscanf(fsave, "%d %d", M, N);
 	printf("Map size loaded.\n");
 
 	/* Load Villages */
-	fscanf(fsave, "%s", Temp);
-	fscanf(fsave, "%s", Temp);
+	fscanf(fsave, "%s", &Temp);
+	fscanf(fsave, "%s", &Temp);
 	CreateEmptyVil(LVillages);
 	while (strcmp(Temp,"PLAYER1")!=0){
 		fscanf(fsave, "%d %d", &x, &y);
 		fscanf(fsave, "%d", &inc);
 		MakeVillage(&V, x, y, inc);
 		InsVLastVil(LVillages, V);
-		fscanf(fsave, "%s", Temp);
+		fscanf(fsave, "%s", &Temp);
 	}
 	printf("Bunch of villages loaded.\n");
 
@@ -166,36 +166,36 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	fscanf(fsave, "%d", &upkeep);
 	fscanf(fsave, "%d", &warna);
 
-	Make_Player(P1, warna);
-	Update_Gold(P1, gold);
-	Update_Income(P1, income);
-	Update_Upkeep(P1, upkeep);
+	Gold(*P1) = gold;
+	Income(*P1) = income;
+	Upkeep(*P1) = upkeep;
+	Warna(*P1) = warna;
 
 	printf("General properties of Player 1 loaded.\n");
 	/* Daftar village */
-	fscanf(fsave, "%s", Temp);
-	fscanf(fsave, "%s", Temp);
+	fscanf(fsave, "%s", &Temp);
+	fscanf(fsave, "%s", &Temp);
 	CreateEmptyVil(&VillageList(*P1));
 	while (strcmp(Temp,"UNIT(S)")!=0){
 		fscanf(fsave, "%d %d", &x, &y);
 		fscanf(fsave, "%d", &inc);
 		MakeVillage(&V, x, y, inc);
 		Add_Village(P1, V);
-		fscanf(fsave, "%s", Temp);
+		fscanf(fsave, "%s", &Temp);
 	}
 	printf("Villages of Player 1 loaded.\n");
 	/* Daftar Unit */
-	fscanf(fsave, "%s", Temp);
+	fscanf(fsave, "%s", &Temp);
 	CreateEmptyUnit(&UnitList(*P1));
 	while (strcmp(Temp,"PLAYER2")!=0){
-		fscanf(fsave, "%s", Jenis);
+		fscanf(fsave, "%s", &Jenis);
 		fscanf(fsave, "%d %d", &i, &j);
 		U = CreateUnit(Jenis,MakePOINT(i,j));
 		fscanf(fsave, "%d", &Health(U));
 		fscanf(fsave, "%d", &Movement_Point(U));
-		fscanf(fsave, "%c", &Kesempatan_Serangan(U));
+		fscanf(fsave, "%d", &Kesempatan_Serangan(U));
 		Add_Unit_Last(P1,U);
-		fscanf(fsave, "%s", Temp);
+		fscanf(fsave, "%s", &Temp);
 	}
 	printf("Units of Player 1 loaded.\n");
 	printf("Player 1 has been successfully loaded.\n");
@@ -206,36 +206,36 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	fscanf(fsave, "%d", &upkeep);
 	fscanf(fsave, "%d", &warna);
 
-	Make_Player(P2, warna);
-	Update_Gold(P2, gold);
-	Update_Income(P2, income);
-	Update_Upkeep(P2, upkeep);
-	printf("General properties of Player 2 loaded.\n");
+	Gold(*P2) = gold;
+	Income(*P2) = income;
+	Upkeep(*P2) = upkeep;
+	Warna(*P2) = warna;
 
+	printf("General properties of Player 2 loaded.\n");
 	/* Daftar village */
-	fscanf(fsave, "%s", Temp);
-	fscanf(fsave, "%s", Temp);
+	fscanf(fsave, "%s", &Temp);
+	fscanf(fsave, "%s", &Temp);
 	CreateEmptyVil(&VillageList(*P2));
 	while (strcmp(Temp,"UNIT(S)")!=0){
 		fscanf(fsave, "%d %d", &x, &y);
 		fscanf(fsave, "%d", &inc);
 		MakeVillage(&V, x, y, inc);
 		Add_Village(P2, V);
-		fscanf(fsave, "%s", Temp);
+		fscanf(fsave, "%s", &Temp);
 	}
 	printf("Villages of Player 2 loaded.\n");
 	/* Daftar Unit */
-	fscanf(fsave, "%s", Temp);
-	CreateEmptyVil(&VillageList(*P2));
+	fscanf(fsave, "%s", &Temp);
+	CreateEmptyUnit(&UnitList(*P2));
 	while (strcmp(Temp,"END")!=0){
-		fscanf(fsave, "%s", Jenis);
+		fscanf(fsave, "%s", &Jenis);
 		fscanf(fsave, "%d %d", &i, &j);
 		U = CreateUnit(Jenis,MakePOINT(i,j));
 		fscanf(fsave, "%d", &Health(U));
 		fscanf(fsave, "%d", &Movement_Point(U));
-		fscanf(fsave, "%c", &Kesempatan_Serangan(U));
+		fscanf(fsave, "%d", &Kesempatan_Serangan(U));
 		Add_Unit_Last(P2,U);
-		fscanf(fsave, "%s", Temp);
+		fscanf(fsave, "%s", &Temp);
 	}
 	printf("Units of Player 2 loaded.\n");
 	printf("Player 2 has been successfully loaded.\n");
