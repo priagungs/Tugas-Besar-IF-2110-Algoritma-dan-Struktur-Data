@@ -1,14 +1,16 @@
 /*#include "jam.h"*/
-#include "stackofpoint.h"
+#include "stackofplayer.h"
 #include "listvillage.h"
 #include "matriks.h"
 #include "player.h"
-#include "mesinkata.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "point.h"
 #include "saveload.h"
 #include "listofunit.h"
+#include "interface.h"
+
 
 int NB,NK,IndeksUnit;
 char Str[15];
@@ -16,32 +18,32 @@ Player P1;
 Player P2;
 Player *CurrentPlayer;
 ListVil Villages;
-StackPoint SP;
+StackPlayer SP;
 int turn=1;
 Unit Now;
 boolean endgame = false;
-FILE *pitaa;
-infotypeU history;
 
 
 PETA P;
 
-//Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c -o hasil
+//Command: gcc -Wall main.c saveload.c interface.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c -o hasil
 
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
 void Move(PETA M, Unit* CurrentUnit);
-void ClearStack(StackPoint *SP);
+void ClearStack(StackPlayer *SP);
 void RekrutUnit(void);
 void clrscr();
 void INFO(POINT temp);
-infotypeU Undo(StackPoint SP);
+Player Undo(StackPlayer SP);
 void HealWhiteMage(Player* P, PETA M);
 void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV );
 
 int main(){
 	clrscr();
 	int choice;
+	BattleForOlympia();
+	delay(2);
 	printf("1. New Game\n2. Load Game\nInput : ");
 	scanf("%d", &choice);
 	while(choice != 1 && choice != 2){
@@ -58,7 +60,7 @@ int main(){
 		Make_Player(&P2,2);
 		CreateEmptyVil(&Villages);
 
-		printf("JUDUL\n");
+		BattleForOlympia();
 		printf("Masukkan input besar peta (KOLOM,BARIS)\n");
 		scanf("%d %d", &NK,&NB);
 		if(NK < 8 && NB <8){
@@ -92,7 +94,6 @@ int main(){
 	PrintPETA(P);
 
 	do{
-
 		PrintPlayerStatus(*CurrentPlayer,Now);
 		printf("Your Input: ");
 		scanf("%s",Str);
@@ -144,7 +145,7 @@ int main(){
 				if(!strcmp(Jenis_Unit(Now),"King"))
 					Add_Unit_First(CurrentPlayer, Now);
 				else
-				Add_Unit_Last(CurrentPlayer, Now);
+					Add_Unit_Last(CurrentPlayer, Now);
 				UpdatePETA(&P,P1,P2,Villages);
 				clrscr();
 				PrintPETA(P);
@@ -154,7 +155,6 @@ int main(){
 			}
 
 		}
-
 
 		else if(!strcmp(CKata.TabKata,"UNDO")){
 			if(!IsEmptyPointStack(SP)){
@@ -176,7 +176,6 @@ int main(){
 			}
 		}
 
-
 		else if(!strcmp(CKata.TabKata,"CHANGE_UNIT")){
 			int nomor;
 			printf("============= YOUR UNITS =============\n");
@@ -186,9 +185,8 @@ int main(){
 			IndeksUnit = nomor+1;
 			Now = SearchNomor(UnitList(*CurrentPlayer),nomor);
 			printf("Your current unit is %s\n",Jenis_Unit(Now));
+
 		}
-
-
 
 		else if(!strcmp(CKata.TabKata,"NEXT_UNIT")){
 			boolean ada = false;
@@ -201,6 +199,7 @@ int main(){
 				IndeksUnit++;
 			}
 		}
+
 		else if(!strcmp(CKata.TabKata,"RECRUIT")){
 			//Cek unit yang mencoba rekrut
 		 //Cek unit yang mencoba rekrut
@@ -210,9 +209,8 @@ int main(){
 		    RekrutUnit();
 		   } else {
 		    printf("Rekrut unit hanya dapat dilakukan oleh king!\n");
-			}
+		   }
 		}
-
 
 		else if(!strcmp(CKata.TabKata,"ATTACK")){
 			ClearStack(&SP);
@@ -224,6 +222,7 @@ int main(){
 			else {
 				Attack(&Now, &P1);
 			}
+
 
 			//push moved current unit to list of unit
 			if(Health(Now) != 0){
@@ -254,7 +253,6 @@ int main(){
 
 		}
 
-
 		else if(!strcmp(CKata.TabKata,"MAP")){
 			UpdatePETA(&P,P1,P2,Villages);
 			PrintPETA(P);
@@ -269,7 +267,6 @@ int main(){
 			PrintPETA(P);
 			INFO(temp);
 		}
-
 
 		else if(!strcmp(CKata.TabKata,"END_TURN")){
 			ClearStack(&SP);
@@ -296,23 +293,20 @@ int main(){
 
 		}
 
-
-		else if(!strcmp(CKata.TabKata,"SAVE")){
+		else if(!strcmp(Str,"SAVE")){
 			ClearStack(&SP);
 			clrscr();
 			Save(NK, NB, P1, P2, Villages);
 		}
-
-
 		else{
-			if(strcmp(CKata.TabKata,"EXIT")){
+			if(strcmp(Str,"EXIT")){
 				clrscr();
 				PrintPETA(P);
 				printf("No command found!\n");
 			}
 		}
 
-	}while(strcmp(CKata.TabKata,"EXIT"));
+	}while(strcmp(Str,"EXIT"));
 	if(!endgame){
 		printf("Do you want to save your game ? (y/n)\n");
 		char c;
@@ -324,6 +318,7 @@ int main(){
 	}
 	ClearStack(&SP);
 }
+
 
 void RekrutUnit(void){
 	//Cek castle tidak penuh!
@@ -567,6 +562,8 @@ void RekrutUnit(void){
 			printf("Unit tidak berhasil direkrut.\n");
 		}
 	}
+
+
 }
 
 void Move(PETA M, Unit* CurrentUnit){
@@ -617,17 +614,16 @@ void PrintPlayerStatus(Player PlayerTemp,Unit U){
 	}
 }
 
-infotypeU Undo(StackPoint SP){
-	infotypeU Temp;
-	PopPoint(&SP,&Temp);
+Player Undo(StackPlayer SP){
+	Player Temp;
+	Pop(&SP,&Temp);
 	return Temp;
 }
 
-void ClearStack(StackPoint *SP){
-	infotypeU temp;
-	while(!IsEmptyPointStack(*SP)){
-		PopPoint(SP,&temp);
-	}
+void ClearStack(StackPlayer *SP){
+	infotype temp;
+	while(!IsEmpty(*SP))
+		Pop(SP,&temp);
 }
 
 void clrscr()
