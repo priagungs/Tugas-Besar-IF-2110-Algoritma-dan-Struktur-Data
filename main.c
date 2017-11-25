@@ -1,12 +1,12 @@
 /*#include "jam.h"*/
-#include "stackofplayer.h"
+#include "stackofpoint.h"
 #include "listvillage.h"
 #include "matriks.h"
 #include "player.h"
+#include "mesinkata.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "point.h"
 #include "saveload.h"
 #include "listofunit.h"
 #include "interface.h"
@@ -18,24 +18,26 @@ Player P1;
 Player P2;
 Player *CurrentPlayer;
 ListVil Villages;
-StackPlayer SP;
+StackPoint SP;
 int turn=1;
 Unit Now;
 boolean endgame = false;
+FILE *pitaa;
+infotypeU history;
 
 
 PETA P;
 
-//Command: gcc -Wall main.c saveload.c interface.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c -o hasil
+//Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c mesinkata.c mesinkar.c stackofpoint.c saveload.c interface.c -lm -o hasil
 
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
 void Move(PETA M, Unit* CurrentUnit);
-void ClearStack(StackPlayer *SP);
+void ClearStack(StackPoint *SP);
 void RekrutUnit(void);
 void clrscr();
 void INFO(POINT temp);
-Player Undo(StackPlayer SP);
+infotypeU Undo(StackPoint SP);
 void HealWhiteMage(Player* P, PETA M);
 void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV );
 
@@ -614,16 +616,16 @@ void PrintPlayerStatus(Player PlayerTemp,Unit U){
 	}
 }
 
-Player Undo(StackPlayer SP){
-	Player Temp;
-	Pop(&SP,&Temp);
+infotypeU Undo(StackPoint SP){
+	infotypeU Temp;
+	PopPoint(&SP,&Temp);
 	return Temp;
 }
 
-void ClearStack(StackPlayer *SP){
-	infotype temp;
-	while(!IsEmpty(*SP))
-		Pop(SP,&temp);
+void ClearStack(StackPoint *SP){
+	infotypeU temp;
+	while(!IsEmptyPointStack(*SP))
+		PopPoint(SP,&temp);
 }
 
 void clrscr()
