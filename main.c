@@ -241,12 +241,14 @@ int main(){
 			}
 
 			if(IsKingDead(UnitList(P1))){
-				printf("Player 2 Win!\n");
+				Player2Win();
+				delay(2);
 				endgame=true;
 				break;
 			}
 			else if(IsKingDead(UnitList(P2))) {
-				printf("Player 1 Win!\n");
+				Player1Win();
+				delay(2);
 				endgame=true;
 				break;
 			}
