@@ -8,7 +8,7 @@
 void Make_Player(Player *Pl, int warna){
 	Gold(*Pl) = 500;
 	Income(*Pl) = 100;
-	Upkeep(*Pl) = 50;
+	Upkeep(*Pl) = 0;
 	Warna(*Pl) = warna;
 	CreateEmptyVil(&VillageList(*Pl));
 	CreateEmptyUnit(&UnitList(*Pl));
@@ -59,7 +59,7 @@ void Add_Village (Player *Pl, Village V){
 
 void Del_Village (Player *Pl, Village V){
 // menghapus V pada list of village di player
-	Update_Income(Pl, -1*IncomeVil(V));
+	Update_Income(Pl, (-1)*IncomeVil(V));
 	DelPVil(&VillageList(*Pl),V);
 }
 
@@ -70,24 +70,24 @@ void Next_Unit(Player Pl,int *nomor, Unit *Now, boolean *ada){
 		NbUnit ++;
 		P = NextUnit(P);
 	}
-	if(*nomor > NbUnit){
+	if(*nomor > NbUnit)
+		*nomor -= NbUnit;
+	int tmp = *nomor;
+	Unit U = SearchNomor(UnitList(Pl),*nomor);
+	while(Movement_Point(U) == 0 && !Kesempatan_Serangan(U)){
+		(*nomor) ++;
+		if(*nomor > NbUnit)
+			*nomor -= NbUnit;
+		if(*nomor == tmp){
+			*ada = true;
+			break;
+		}
+		U = SearchNomor(UnitList(Pl),*nomor);
+	}
+	if(*ada){
 		printf("No more unit availlable.\n");
-		*ada = true;
 	}
 	else{
-		Unit U = SearchNomor(UnitList(Pl),*nomor);
-		while(Movement_Point(U) == 0 && !Kesempatan_Serangan(U)){
-			(*nomor) ++;
-			if(*nomor > NbUnit)
-			break;
-			U = SearchNomor(UnitList(Pl),*nomor);
-		}
-		if(*nomor > NbUnit){
-			printf("No more unit availlable.\n");
-			*ada = true;
-		}
-		else{
-			*Now = U;
-		}
+		*Now = U;
 	}
 }
