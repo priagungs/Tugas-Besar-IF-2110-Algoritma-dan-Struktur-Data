@@ -10,6 +10,7 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 	fsave = fopen (filename,"w");
 
 	/* ALGORITMA */
+
 	/* Save ukuran matriks */
 	fprintf(fsave, "SIZE\n");
 	fprintf(fsave, "%d %d\n", M, N);
@@ -115,6 +116,14 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 		fprintf(fsave, "%d\n", Kesempatan_Serangan(InfoUnit(Pu)));
 	}
 	fprintf(fsave, "END\n");
+
+	/* Save current time */
+	time_t CurrTime;
+	char* CTString;
+	CurrTime = time(NULL);
+	CTString = ctime(&CurrTime);
+	fprintf(fsave, "Last saved on %s.\n", CTString);
+
 	fclose(fsave);
 	printf("The Game has been successfully saved.\n");
 }
@@ -141,6 +150,11 @@ void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
 	int i, j;
 
 	/* ALGORITMA */
+	/* Abaikan baris paling atas */
+	/*fscanf(fsave, "%s", &Temp);
+	while (strcmp(Temp,"SIZE")!=0){
+		fscanf(fsave, "%s", &Temp);
+	}*/
 	/* Load ukuran matriks */
 	fscanf(fsave, "%s", &Temp);
 	fscanf(fsave, "%d %d", M, N);
