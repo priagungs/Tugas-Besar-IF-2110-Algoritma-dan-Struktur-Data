@@ -65,7 +65,7 @@ void MakePETA(int NK, int NB, PETA *P){
 }
 
 
-void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV ){
+void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV, Unit CurrentUnit ){
 
 	//Set peta jadi kosong lagi
 	for (int i = 0; i < NBrsEff(*P); ++i)
@@ -183,6 +183,9 @@ void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV ){
       		AlamatV2 = NextVillage(AlamatV2);
     	}
   	}
+
+  	//Update warna current unit
+  	KUP(*P,Absis(Lokasi_Unit(CurrentUnit)), Ordinat(Lokasi_Unit(CurrentUnit))) = 3;
 }
 
 // Print PETA //
@@ -284,8 +287,8 @@ void PrintPETA(PETA P){
 				}else if (UP(P,j,i) == 'W'){
 					printf("W");
 				}else if(UP(P,j,i) == '#'){
-          printf("#");
-        }else {
+		          	printf("#");
+		        }else {
 					printf(" ");
 				}
 
@@ -301,12 +304,12 @@ void PrintPETA(PETA P){
 				}else if (UP(P,j,i) == 'W'){
 					print_green('W');
 				}else if(UP(P,j,i) == '#'){
-          printf("#");
-        }else {
+		          	printf("#");
+		        }else {
 					print_green(' ');
 				}
 
-			} else {
+			} else if (KUP(P,j,i) == 2){
 
 				if (UP(P,j,i) == 'K') {
 					print_red('K');
@@ -317,9 +320,27 @@ void PrintPETA(PETA P){
 				}else if (UP(P,j,i) == 'W'){
 					print_red('W');
 				}else if(UP(P,j,i) == '#'){
-          printf("#");
-        }else {
+		          	printf("#");
+		        }else {
 					print_red(' ');
+				}
+
+				
+
+			} else if (KUP(P,j,i) == 3) {
+
+				if (UP(P,j,i) == 'K') {
+					print_magenta('K');
+				}else if (UP(P,j,i) == 'A'){
+					print_magenta('A');
+				}else if (UP(P,j,i) == 'S'){
+					print_magenta('S');
+				}else if (UP(P,j,i) == 'W'){
+					print_magenta('W');
+				}else if(UP(P,j,i) == '#'){
+		          	printf("#");
+		        }else {
+					print_magenta(' ');
 				}
 
 			}

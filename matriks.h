@@ -49,7 +49,7 @@ void InitiateTowerCastle (PETA *M);
 
 void MakePETA (int NB, int NK, PETA *P);
 
-void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV );
+void UpdatePETA(PETA *P, Player P1, Player P2, ListVil LV, Unit CurrentUnit );
 
 void PrintPETA(PETA P);
 

@@ -39,7 +39,7 @@ void clrscr();
 void INFO(POINT temp);
 infotypeU Undo(StackPoint SP);
 void HealWhiteMage(Player* P, PETA M);
-void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV );
+void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV , Unit CurrentUnit);
 
 int main(){
 	clrscr();
@@ -77,7 +77,7 @@ int main(){
 		Now = CreateUnit("King",MakePOINT(KolMin+1,NB-2));
 		InsUnitFirst(&UnitList(P1),Now);
 		MakePETA(NK,NB,&P);
-		UpdatePETA(&P,P1,P2,Villages);
+		UpdatePETA(&P,P1,P2,Villages,Now);
 		RandomVillage(&Villages,10,NK,NB,&P);
 	}
 	else if (choice == 2){
@@ -86,13 +86,14 @@ int main(){
 		Load(&NK, &NB, &P1, &P2, &Villages);
 		Now = InfoUnit(FirstUnit(UnitList(P1)));
 		MakePETA(NK,NB,&P);
-		UpdatePETA(&P,P1,P2,Villages);
+		UpdatePETA(&P,P1,P2,Villages,Now);
 	}
 
 	CurrentPlayer = &P1;
 	IndeksUnit = 2;
 
 	clrscr();
+	UpdatePETA(&P,P1,P2,Villages,Now);
 	PrintPETA(P);
 
 	do{
@@ -148,7 +149,7 @@ int main(){
 					Add_Unit_First(CurrentPlayer, Now);
 				else
 					Add_Unit_Last(CurrentPlayer, Now);
-				UpdatePETA(&P,P1,P2,Villages);
+				UpdatePETA(&P,P1,P2,Villages,Now);
 				clrscr();
 				PrintPETA(P);
 			}
@@ -168,11 +169,11 @@ int main(){
 				InsUnitLast(&UnitList(*CurrentPlayer),oldUnit);
 				Now = oldUnit;
 				clrscr();
-				UpdatePETA(&P,P1,P2,Villages);
+				UpdatePETA(&P,P1,P2,Villages,Now);
 				PrintPETA(P);
 			}else{
 				clrscr();
-				UpdatePETA(&P,P1,P2,Villages);
+				UpdatePETA(&P,P1,P2,Villages,Now);
 				PrintPETA(P);
 				printf("You cannot undo!\n");
 			}
@@ -195,6 +196,7 @@ int main(){
 			Next_Unit(*CurrentPlayer, &IndeksUnit, &Now, &ada);
 			if(!ada){
 				clrscr();
+				UpdatePETA(&P,P1,P2,Villages,Now);
 				PrintPETA(P);
 				printf("Your current unit is %s at ",Jenis_Unit(Now));
 				TulisPOINT(Lokasi_Unit(Now)); printf("\n");
@@ -253,12 +255,13 @@ int main(){
 				break;
 			}
 
-			UpdatePETA(&P,P1,P2,Villages);
+			UpdatePETA(&P,P1,P2,Villages,Now);
 
 		}
 
 		else if(!strcmp(CKata.TabKata,"MAP")){
-			UpdatePETA(&P,P1,P2,Villages);
+			UpdatePETA(&P,P1,P2,Villages,Now);
+			clrscr();
 			PrintPETA(P);
 		}
 
@@ -290,10 +293,11 @@ int main(){
 			ResetAttackChance(&UnitList(P2));
 			IndeksUnit = 2;
 			clrscr();
+			UpdatePETA(&P,P1,P2,Villages,Now);
 			PrintPETA(P);
 			HealWhiteMage(&P1, P);
 			HealWhiteMage(&P2, P);
-			HealVillage(&P, &P1, &P2, Villages);
+			HealVillage(&P, &P1, &P2, Villages, Now);
 
 		}
 
@@ -305,6 +309,7 @@ int main(){
 		else{
 			if(strcmp(Str,"EXIT")){
 				clrscr();
+				UpdatePETA(&P,P1,P2,Villages,Now);
 				PrintPETA(P);
 				printf("No command found!\n");
 			}
@@ -557,7 +562,7 @@ void RekrutUnit(void){
 
 			Update_Gold(CurrentPlayer, hargaUnit);
 			Update_Upkeep(CurrentPlayer, upkeepUnit);
-			UpdatePETA(&P,P1,P2,Villages);
+			UpdatePETA(&P,P1,P2,Villages,Now);
 			clrscr();
 			PrintPETA(P);
 			printf("Unit berhasil direkrut!\n");
@@ -769,10 +774,10 @@ void HealWhiteMage(Player* P, PETA M){
 	}
 }
 
-void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV ){
+void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV, Unit CurrentUnit ){
  	int Baris = NBrsEff(*P);
 	int Kolom = NKolEff(*P);
- 	UpdatePETA(P,*P1,*P2,LV);
+ 	UpdatePETA(P,*P1,*P2,LV,CurrentUnit);
  	for (int j = 0; j < Baris; ++j)
  	{
 		for (int i = 0; i < Kolom; ++i)
