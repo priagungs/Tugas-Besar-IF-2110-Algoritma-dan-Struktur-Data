@@ -137,9 +137,9 @@ float Panjang (POINT P1, POINT P2)
 /* Menggunakan rumus pythagoras */
 {
 	int absisSquared, ordinatSquared;
-	absisSquared = (Absis(P1) - Absis(P2))*(Absis(P1) - Absis(P2));
-	ordinatSquared =  (Ordinat(P1) - Ordinat(P2))*(Ordinat(P1) - Ordinat(P2));
-	return sqrt(absisSquared + ordinatSquared);
+	absisSquared = abs(Absis(P1) - Absis(P2));
+	ordinatSquared =  abs(Ordinat(P1) - Ordinat(P2));
+	return (absisSquared + ordinatSquared);
 }
 
 void Geser (POINT *P, int deltaX, int deltaY)
