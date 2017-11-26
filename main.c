@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "queue.h"
 #include "saveload.h"
 #include "listofunit.h"
 #include "interface.h"
@@ -27,10 +28,11 @@ infotypeU history;
 boolean Visit[51][51];
 int dx[] = {1,-1,0,0};
 int dy[] = {0,0,1,-1};
+Queue Q;
 
 PETA P;
 
-//Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c mesinkata.c mesinkar.c stackofpoint.c saveload.c interface.c -lm -o hasil
+//Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c queue.c stackofplayer.c mesinkata.c mesinkar.c stackofpoint.c saveload.c interface.c -lm -o hasil
 
 void BFS(int MP, POINT P, PETA *Map);
 void PrintPlayerStatus(Player P,Unit U);
@@ -46,6 +48,9 @@ void HealVillage(PETA *P, Player *P1, Player *P2, ListVil LV , Unit CurrentUnit)
 
 int main(){
 	clrscr();
+	CreateEmptyQueue(&Q,4);
+	AddQueue(&Q,1);
+	AddQueue(&Q,2);
 	int choice;
 	BattleForOlympia();
 	delay(2);
@@ -282,11 +287,17 @@ int main(){
 			ClearStack(&SP);
 			Update_Turn(CurrentPlayer);
 			if(turn%2){
+				DelQueue(&Q,&turn);
+				AddQueue(&Q,1);
+				turn = HeadQueue(Q);
 				CurrentPlayer = &P2;
 				ResetMovementPoint(&UnitList(*CurrentPlayer));
 				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
 				turn++;
 			} else {
+				DelQueue(&Q,&turn);
+				AddQueue(&Q,2);
+				turn = HeadQueue(Q);
 				CurrentPlayer = &P1;
 				ResetMovementPoint(&UnitList(*CurrentPlayer));
 				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
@@ -616,7 +627,7 @@ void Move(PETA M, Unit* CurrentUnit){
 		printf("Please enter coordinate x y : ");
 		scanf("%d %d",&X,&Y);
 		POINT p_after = MakePOINT(X,Y);
-		while(!CanUnitMoveTo(*CurrentUnit, p_after) || !NoObstacle(*CurrentUnit, p_after, M)){
+		while(UP(M,X,Y) != '#'){
 			printf("You can't move there!\n");
 			printf("Please enter coordinate x y : ");
 			scanf("%d %d",&X,&Y);
