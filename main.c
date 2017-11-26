@@ -293,7 +293,6 @@ int main(){
 				CurrentPlayer = &P2;
 				ResetMovementPoint(&UnitList(*CurrentPlayer));
 				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
-				turn++;
 			} else {
 				DelQueue(&Q,&turn);
 				AddQueue(&Q,2);
@@ -301,7 +300,6 @@ int main(){
 				CurrentPlayer = &P1;
 				ResetMovementPoint(&UnitList(*CurrentPlayer));
 				Now = InfoUnit(FirstUnit(UnitList(*CurrentPlayer)));
-				turn++;
 			}
 			ResetAttackChance(&UnitList(P1));
 			ResetAttackChance(&UnitList(P2));
@@ -588,7 +586,7 @@ void RekrutUnit(void){
 
 
 }
-
+	
 void BFS(int MP, POINT P, PETA *Map){
 	UP(*Map, P.X, P.Y) = '#';
 	for(int i=0;i<4;i++){
