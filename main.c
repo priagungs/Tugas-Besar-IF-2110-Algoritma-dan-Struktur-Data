@@ -19,17 +19,20 @@ Player P2;
 Player *CurrentPlayer;
 ListVil Villages;
 StackPoint SP;
-int turn=1;
+int turn=1, MoveP;
 Unit Now;
 boolean endgame = false;
 FILE *pitaa;
 infotypeU history;
-
+boolean Visit[51][51];
+int dx[] = {1,-1,0,0};
+int dy[] = {0,0,1,-1};
 
 PETA P;
 
 //Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c stackofplayer.c mesinkata.c mesinkar.c stackofpoint.c saveload.c interface.c -lm -o hasil
 
+void BFS(int MP, POINT P, PETA *Map);
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
 void Move(PETA M, Unit* CurrentUnit);
@@ -575,17 +578,35 @@ void RekrutUnit(void){
 
 }
 
+void BFS(int MP, POINT P, PETA *Map){
+	UP(*Map, P.X, P.Y) = '#';
+	for(int i=0;i<4;i++){
+		int xx = (Absis(P)) + dx[i];
+		int yy = (Ordinat(P)) + dy[i];
+		POINT PP = MakePOINT(xx,yy);
+		if( xx >= 0 && xx < NBrsEff(*Map) && yy >= 0 && yy < NKolEff(*Map) && MP > 0 && Panjang(P,Lokasi_Unit(Now)) <= MoveP){
+			if(KUP(*Map, xx, yy) == 0){
+				BFS(MP-1, PP, Map);
+			}
+		}
+	}
+	Visit[Absis(P)][Ordinat(P)] = true;
+}
+
 void Move(PETA M, Unit* CurrentUnit){
 	int X,Y;
 	if(Movement_Point(*CurrentUnit) <= 0){
-	}
-	// print peta dengan posisi dimana unit bisa berpindah
+	}	
+	// print peta dengan posisi dimana unit bisa berpindah	
 	else{
-		for(int i=0; i<NBrsEff(M); i++){
-			for(int j=0; j<NKolEff(M); j++){
-				POINT temp = MakePOINT(i,j);
-				if(CanUnitMoveTo(*CurrentUnit, temp) && NoObstacle(*CurrentUnit, temp, M) && Panjang(temp, Lokasi_Unit(*CurrentUnit)) != 0){
-					UP(M,i,j) = '#';
+		MoveP = Movement_Point(*CurrentUnit);
+		for(int i=0;i<4;i++){
+			int xx = Absis(Lokasi_Unit(*CurrentUnit)) + dx[i];
+			int yy = Ordinat(Lokasi_Unit(*CurrentUnit)) + dy[i];
+			POINT PP = MakePOINT(xx,yy);
+			if( xx >= 0 && xx < NBrsEff(M) && yy >= 0 && yy < NKolEff(M) && MoveP > 0 && Panjang(PP,Lokasi_Unit(Now)) <= MoveP){
+				if(KUP(M, xx, yy) == 0){
+					BFS(MoveP-1, PP, &M);
 				}
 			}
 		}
