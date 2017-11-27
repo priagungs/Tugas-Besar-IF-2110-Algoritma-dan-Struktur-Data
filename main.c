@@ -104,17 +104,18 @@ int main(){
 	UpdatePETA(&P,P1,P2,Villages,Now);
 	PrintPETA(P);
 
-	do{
+	do{	//print status player
 		PrintPlayerStatus(*CurrentPlayer,Now);
 		printf("Your Input: ");
+		//input command
 		scanf("%s",Str);
+		//menulis command ke file eksternal
 		pitaa = fopen("pitakar.txt","w");
 		fprintf(pitaa,"%s .",Str);
 		fclose(pitaa);
+		//clear array CKata
 		memset(&CKata.TabKata[0], 0, sizeof(CKata.TabKata));
 		STARTKATA();
-		//printf("%s\n",CKata.TabKata);
-
 		if(!strcmp(CKata.TabKata,"MOVE")){
 			//menulis history untuk undo
 			history.Pt = Lokasi_Unit(Now);
@@ -168,10 +169,14 @@ int main(){
 		}
 
 		else if(!strcmp(CKata.TabKata,"UNDO")){
+			//cek stack kosong/tidak
 			if(!IsEmptyPointStack(SP)){
+				//lakukan undo
 				infotypeU old;
 				PopPoint(&SP,&old);
+				//menghapus unit yang lama
 				Del_Unit(CurrentPlayer,Now);
+				//membuat unit baru dengan point yang lama
 				Unit oldUnit = CreateUnit(Jenis_Unit(Now),old.Pt);
 				Movement_Point(oldUnit) = old.mp;
 				InsUnitLast(&UnitList(*CurrentPlayer),oldUnit);
@@ -668,6 +673,7 @@ infotypeU Undo(StackPoint SP){
 
 void ClearStack(StackPoint *SP){
 	infotypeU temp;
+	//mengahapus seluruh isi stack dan dealokasi
 	while(!IsEmptyPointStack(*SP))
 		PopPoint(SP,&temp);
 }
