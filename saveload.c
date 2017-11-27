@@ -127,8 +127,8 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 
     J = MakeJAM(timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 
-    fprintf(fsave,"Last saved on");
- 	TulisJAMtoFILE(fout,J);
+    fprintf(fsave,"Last saved on ");
+ 	TulisJAMtoFILE(fsave,J);
 
 	fclose(fsave);
 	printf("The Game has been successfully saved.\n");
