@@ -756,11 +756,19 @@ void Attack(Unit* Now, Player* Enemy){
 void INFO(POINT temp){
 	printf("============ Cell Info ============\n");
 	if(SearchKoordinatVil(VillageList(P1),temp) != Nil)
-		printf("Village\nOwned by Player 1.\n\n");
+		printf("There is a Village\nOwned by Player 1.\n\n");
 	else if(SearchKoordinatVil(VillageList(P2),temp) != Nil)
-		printf("Village\nOwned by Player 2.\n\n");
+		printf("There is a Village\nOwned by Player 2.\n\n");
 	else if(SearchKoordinatVil(Villages,temp) != Nil)
-		printf("Village\nNobody owns it.\n\n");
+		printf("There is a Village\nNobody owns it.\n\n");
+	else if(BP(P,temp.X,temp.Y) == 'C' && KBP(P,temp.X,temp.Y) == 1)
+		printf("There is a Castle\nOwned by Player 1\n\n");
+	else if(BP(P,temp.X,temp.Y) == 'T' && KBP(P,temp.X,temp.Y) == 1)
+		printf("There is a Tower\nOwned by Player 1\n\n");
+	else if(BP(P,temp.X,temp.Y) == 'C' && KBP(P,temp.X,temp.Y) == 2)
+		printf("There is a Castle\nOwned by Player 2\n\n");
+	else if(BP(P,temp.X,temp.Y) == 'T' && KBP(P,temp.X,temp.Y) == 2)
+		printf("There is a Tower\nOwned by Player 2\n\n");
 	else printf("There is an empty land.\n\n");
 	addressUnit U;
 	printf("============ Unit Info ============\n");
