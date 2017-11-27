@@ -37,7 +37,7 @@ PETA P;
 void BFS(int MP, POINT P, PETA *Map);
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
-void Move(PETA M, Unit* CurrentUnit);
+void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit);
 void ClearStack(StackPoint *SP);
 void RekrutUnit(void);
 void clrscr();
@@ -113,7 +113,7 @@ int main(){
 		fclose(pitaa);
 		memset(&CKata.TabKata[0], 0, sizeof(CKata.TabKata));
 		STARTKATA();
-		printf("%s\n",CKata.TabKata);
+		//printf("%s\n",CKata.TabKata);
 
 		if(!strcmp(CKata.TabKata,"MOVE")){
 			//menulis history untuk undo
@@ -123,7 +123,7 @@ int main(){
 			//pop current unit from list of unit
 			if(Movement_Point(Now) != 0){
 				Del_Unit(CurrentPlayer, Now);
-				Move(P, &Now);
+				Move(P, *CurrentPlayer, &Now);
 				//push moved current unit to list of unit
 
 				if(BP(P, Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 'V'){
@@ -570,10 +570,10 @@ void RekrutUnit(void){
 			Unit RekrutUnit = CreateUnit(jenisUnitRekrut,lokasiUnitDirekrut);
 			Add_Unit_Last(CurrentPlayer,RekrutUnit);
 			int hargaUnit = -1*Harga_Unit(RekrutUnit);
-			int upkeepUnit = UpkeepUnit(RekrutUnit);
+
 
 			Update_Gold(CurrentPlayer, hargaUnit);
-			Update_Upkeep(CurrentPlayer, upkeepUnit);
+
 			UpdatePETA(&P,P1,P2,Villages,Now);
 			clrscr();
 			PrintPETA(P);
@@ -602,7 +602,8 @@ void BFS(int MP, POINT P, PETA *Map){
 	Visit[Absis(P)][Ordinat(P)] = true;
 }
 
-void Move(PETA M, Unit* CurrentUnit){
+void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit){
+	int Warna = Warna(PlayerSekarang);
 	int X,Y;
 	if(Movement_Point(*CurrentUnit) <= 0){
 	}	
@@ -614,7 +615,7 @@ void Move(PETA M, Unit* CurrentUnit){
 			int yy = Ordinat(Lokasi_Unit(*CurrentUnit)) + dy[i];
 			POINT PP = MakePOINT(xx,yy);
 			if( xx >= 0 && xx < NBrsEff(M) && yy >= 0 && yy < NKolEff(M) && MoveP > 0 && Panjang(PP,Lokasi_Unit(Now)) <= MoveP){
-				if(KUP(M, xx, yy) == 0){
+				if(KUP(M, xx, yy) == 0 || KUP(M, xx, yy)==Warna){
 					BFS(MoveP-1, PP, &M);
 				}
 			}
@@ -732,7 +733,16 @@ void Attack(Unit* Now, Player* Enemy){
 			}
 		}
 		else {
-			Update_Upkeep(Enemy, -1*UpkeepUnit(NearEnemyUnit[i]));
+			int kurangUpkeep;
+			if (!strcmp(Jenis_Unit(NearEnemyUnit[i]),"Archer"))
+			{
+				kurangUpkeep = 15;
+			} else if (!strcmp(Jenis_Unit(NearEnemyUnit[i]),"Swordsman")){
+				kurangUpkeep = 15;
+			} else{
+				kurangUpkeep = 20;
+			}
+			Update_Upkeep(Enemy, -1*kurangUpkeep);
 		}
 	}
 }

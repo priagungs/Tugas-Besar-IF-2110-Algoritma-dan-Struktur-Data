@@ -1,7 +1,7 @@
 #include "saveload.h"
 
 void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
-/* Menyimpan data game pada file eksternal berisi teks*/
+/* Menyimpan data game pada file "saved.txt" */
 	/* KAMUS LOKAL */
 	FILE *fsave;
 	char filename[100];
@@ -118,24 +118,18 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 	fprintf(fsave, "END\n");
 
 	/* Save current time */
-	time_t rawtime;
-    struct tm * timeinfo;
-    JAM J;
-
-    time ( &rawtime );
-    timeinfo = localtime ( &rawtime );
-
-    J = MakeJAM(timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
-
-    fprintf(fsave,"Last saved on ");
- 	TulisJAMtoFILE(fsave,J);
+	time_t CurrTime;
+	char* CTString;
+	CurrTime = time(NULL);
+	CTString = ctime(&CurrTime);
+	fprintf(fsave, "Last saved on %s.\n", CTString);
 
 	fclose(fsave);
 	printf("The Game has been successfully saved.\n");
 }
 
 void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
-/* Meload data game yang sudah pernah tersimpa dari file eksternal berisi teks */
+/* Meload data game yang sudah pernah tersimpa dari file "saved.txt" */
 	/* KAMUS LOKAL */
 
 

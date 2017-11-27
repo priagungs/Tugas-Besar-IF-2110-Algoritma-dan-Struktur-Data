@@ -1,4 +1,5 @@
 #include "point.h"
+#include <stdlib.h>
 
 /* *** Konstruktor membentuk POINT *** */
 POINT MakePOINT (int X, int Y)

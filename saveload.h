@@ -1,5 +1,4 @@
 #include "player.h"
-#include "jam.h"
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +9,7 @@ Player P1, P2;
 ListVil LVill;
 
 void Save(int M, int N, Player P1, Player P2, ListVil LVill);
-/* Menyimpan data game pada file eksternal berisi teks*/
+/* Menyimpan data game pada file "saved.txt" */
 
 void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVill);
-/* Meload data game yang sudah pernah tersimpa dari file eksternal berisi teks */
+/* Meload data game yang sudah pernah tersimpa dari file "saved.txt" */
