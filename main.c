@@ -174,13 +174,12 @@ int main(){
 				//lakukan undo
 				infotypeU old;
 				PopPoint(&SP,&old);
-				//menghapus unit yang lama
-				Del_Unit(CurrentPlayer,Now);
 				//membuat unit baru dengan point yang lama
-				Unit oldUnit = CreateUnit(Jenis_Unit(Now),old.Pt);
-				Movement_Point(oldUnit) = old.mp;
-				InsUnitLast(&UnitList(*CurrentPlayer),oldUnit);
-				Now = oldUnit;
+				addressUnit Punit = SearchKoordinatUnit(UnitList(*CurrentPlayer),Lokasi_Unit(Now));
+				Lokasi_Unit(InfoUnit(Punit)) = old.Pt;
+				Movement_Point(InfoUnit(Punit)) = old.mp;
+				Lokasi_Unit(Now) = old.Pt;
+				Movement_Point(Now) = old.mp;
 				clrscr();
 				UpdatePETA(&P,P1,P2,Villages,Now);
 				PrintPETA(P);
