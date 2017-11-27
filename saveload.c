@@ -118,11 +118,17 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 	fprintf(fsave, "END\n");
 
 	/* Save current time */
-	time_t CurrTime;
-	char* CTString;
-	CurrTime = time(NULL);
-	CTString = ctime(&CurrTime);
-	fprintf(fsave, "Last saved on %s.\n", CTString);
+	time_t rawtime;
+    struct tm * timeinfo;
+    JAM J;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+
+    J = MakeJAM(timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+
+    fprintf(fsave,"Last saved on");
+ 	TulisJAMtoFILE(fout,J);
 
 	fclose(fsave);
 	printf("The Game has been successfully saved.\n");

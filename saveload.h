@@ -1,4 +1,5 @@
 #include "player.h"
+#include "jam.h"
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
