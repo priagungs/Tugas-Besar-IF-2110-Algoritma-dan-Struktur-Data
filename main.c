@@ -763,15 +763,16 @@ void INFO(POINT temp){
 		printf("Village\nNobody owns it.\n\n");
 	else printf("There is an empty land.\n\n");
 	addressUnit U;
+	printf("============ Unit Info ============\n");
 	if(SearchKoordinatUnit(UnitList(P1), temp) != Nil){
-		printf("============ Unit Info ============\n");
 		U = SearchKoordinatUnit(UnitList(P1), temp);
 		printf("%s",Jenis_Unit(InfoUnit(U)));
 		PrintUnit(InfoUnit(U));
 		printf("Owned by Player 1.\n");
 	}
 	else if(SearchKoordinatUnit(UnitList(P2), temp) != Nil){
-		U = SearchKoordinatUnit(UnitList(P1), temp);
+		U = SearchKoordinatUnit(UnitList(P2), temp);
+		printf("%s",Jenis_Unit(InfoUnit(U)));
 		PrintUnit(InfoUnit(U));
 		printf("Owned by Player 2.\n");
 	}
