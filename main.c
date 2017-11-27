@@ -326,6 +326,12 @@ int main(){
 				printf("No command found!\n");
 			}
 		}
+		if (endgame)
+		{
+			//printf("SELAMAT P%d KAMU TELAH MEMENANGKAN GAME INI!\n", turn%2);
+			strcpy(Str,"EXIT");
+		}
+
 
 	}while(strcmp(Str,"EXIT"));
 	if(!endgame){
