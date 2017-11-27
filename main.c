@@ -37,7 +37,7 @@ PETA P;
 void BFS(int MP, POINT P, PETA *Map);
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
-void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit);
+void Move(PETA M, Unit* CurrentUnit);
 void ClearStack(StackPoint *SP);
 void RekrutUnit(void);
 void clrscr();
@@ -123,7 +123,7 @@ int main(){
 			//pop current unit from list of unit
 			if(Movement_Point(Now) != 0){
 				Del_Unit(CurrentPlayer, Now);
-				Move(P, *CurrentPlayer, &Now);
+				Move(P, &Now);
 				//push moved current unit to list of unit
 
 				if(BP(P, Absis(Lokasi_Unit(Now)), Ordinat(Lokasi_Unit(Now))) == 'V'){
@@ -602,8 +602,7 @@ void BFS(int MP, POINT P, PETA *Map){
 	Visit[Absis(P)][Ordinat(P)] = true;
 }
 
-void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit){
-	int Warna = Warna(PlayerSekarang);
+void Move(PETA M, Unit* CurrentUnit){
 	int X,Y;
 	if(Movement_Point(*CurrentUnit) <= 0){
 	}	
@@ -615,7 +614,7 @@ void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit){
 			int yy = Ordinat(Lokasi_Unit(*CurrentUnit)) + dy[i];
 			POINT PP = MakePOINT(xx,yy);
 			if( xx >= 0 && xx < NBrsEff(M) && yy >= 0 && yy < NKolEff(M) && MoveP > 0 && Panjang(PP,Lokasi_Unit(Now)) <= MoveP){
-				if(KUP(M, xx, yy) == 0 || KUP(M, xx, yy)==Warna){
+				if(KUP(M, xx, yy) == 0){
 					BFS(MoveP-1, PP, &M);
 				}
 			}
