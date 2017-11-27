@@ -1,7 +1,7 @@
-/* File : listsirkuler.h */
+/* File : listofunit.h */
 /* ADT List Sirkuler dengan elemen terakhir menunjuk pada elemen pertama */
 /* Representasi berkait dengan addressUnit adalah pointer */
-/* infotype adalah integer */
+/* infotype adalah Unit */
 
 #ifndef listofunit_H
 #define listofunit_H
@@ -43,73 +43,102 @@ void CreateEmptyUnit (ListUnit *L);
 
 /****************** Manajemen Memori ******************/
 addressUnit AlokasiUnit (Unit X);
-/* Mengirimkan addressUnit hasil alokasi sebuah elemen */
+/* Mengirimkan addressUnit hasil alokasi sebuah unit */
 /* Jika alokasi berhasil, maka addressUnit tidak nil, dan misalnya */
 /* menghasilkan P, maka Info(P)=X, Next(P)=Nil */
 /* Jika alokasi gagal, mengirimkan Nil */
+
 void DealokasiUnit (addressUnit P);
 /* I.S. P terdefinisi */
 /* F.S. P dikembalikan ke sistem */
 /* Melakukan dealokasi/pengembalian addressUnit P */
 
-/****************** PENCARIAN SEBUAH ELEMEN LIST ******************/
+/****************** PENCARIAN SEBUAH unit LIST ******************/
 addressUnit SearchKoordinatUnit (ListUnit L, POINT Koordinat);
+/* Searching Unit X yang memiliki posisi di Koordinat */
+/* Jika ketemu, makam mengirimkan addressUnit dari Unit X tsb */
+/* Jika tidak, mengirimkan Nil */
 
-boolean IsKingDead(ListUnit L);
 /****************** PRIMITIF BERDASARKAN NILAI ******************/
-/*** PENAMBAHAN ELEMEN ***/
+/*** PENAMBAHAN UNIT ***/
 void InsUnitFirst (ListUnit *L, Unit X);
+/* I.S. L mungkin kosong */
+/* F.S. Melakukan alokasi sebuah unit dan */
+/* menambahkan unit X sebagai unit pertama pada list jika alokasi berhasil */
 
 void InsUnitLast (ListUnit *L, Unit X);
+/* I.S. L mungkin kosong */
+/* F.S. Melakukan alokasi sebuah unit dan */
+/* menambahkan unit X pada list di akhir: unit terakhir yang baru */
+/* jika alokasi berhasil. Jika alokasi gagal: I.S.= F.S. */
 
-/*** PENGHAPUSAN ELEMEN ***/
-void DelUnitFirst (ListUnit *L, Unit *X);
+/*** PENGHAPUSAN unit ***/
+void DelUnitFirst (ListUnit *L, Unit * X);
 /* I.S. List L tidak kosong  */
-/* F.S. Elemen pertama list dihapus: nilai info disimpan pada X */
-/*      dan alamat elemen pertama di-dealokasi */
-void DelUnitLast (ListUnit *L, Unit *X);
+/* F.S. unit pertama list dihapus: nilai info disimpan pada X */
+/*      dan alamat unit pertama di-dealokasi */
+
+void DelUnitLast (ListUnit *L, Unit * X);
 /* I.S. list tidak kosong */
-/* F.S. Elemen terakhir list dihapus: nilai info disimpan pada X */
-/*      dan alamat elemen terakhir di-dealokasi */
+/* F.S. unit terakhir list dihapus: nilai info disimpan pada X */
+/*      dan alamat unit terakhir di-dealokasi */
 
 /****************** PRIMITIF BERDASARKAN ALAMAT ******************/
-/*** PENAMBAHAN ELEMEN BERDASARKAN ALAMAT ***/
+/*** PENAMBAHAN unit BERDASARKAN ALAMAT ***/
 void InsertFirstUnit (ListUnit *L, addressUnit P);
 /* I.S. Sembarang, P sudah dialokasi  */
-/* F.S. Menambahkan elemen ber-addressUnit P sebagai elemen pertama */
+/* F.S. Menambahkan unit ber-addressUnit P sebagai unit pertama */
+
 void InsertLastUnit (ListUnit *L, addressUnit P);
 /* I.S. Sembarang, P sudah dialokasi  */
-/* F.S. P ditambahkan sebagai elemen terakhir yang baru */
-void InsertAfterUnit (ListUnit *L, addressUnit P, addressUnit Prec);
-/* I.S. Prec pastilah elemen list dan bukan elemen terakhir, */
-/*      P sudah dialokasi  */
-/* F.S. Insert P sebagai elemen sesudah elemen beralamat Prec */
+/* F.S. P ditambahkan sebagai unit terakhir yang baru */
 
-/*** PENGHAPUSAN SEBUAH ELEMEN ***/
+void InsertAfterUnit (ListUnit *L, addressUnit P, addressUnit Prec); 
+/* I.S. Prec pastilah unit list dan bukan unit terakhir, */
+/*      P sudah dialokasi  */
+/* F.S. Insert P sebagai unit sesudah unit beralamat Prec */
+
+/*** PENGHAPUSAN SEBUAH unit ***/
 void DelFirstUnit (ListUnit *L, addressUnit *P);
 /* I.S. List tidak kosong */
-/* F.S. P adalah alamat elemen pertama list sebelum penghapusan */
-/*      Elemen list berkurang satu (mungkin menjadi kosong) */
-/* First element yg baru adalah suksesor elemen pertama yang lama */
+/* F.S. P adalah alamat unit pertama list sebelum penghapusan */
+/*      unit list berkurang satu (mungkin menjadi kosong) */
+/* First unitt yg baru adalah suksesor unit pertama yang lama */
+
 void DelLastUnit (ListUnit *L, addressUnit *P);
 /* I.S. List tidak kosong */
-/* F.S. P adalah alamat elemen terakhir list sebelum penghapusan  */
-/*      Elemen list berkurang satu (mungkin menjadi kosong) */
-/* Last element baru adalah predesesor elemen pertama yg lama, */
+/* F.S. P adalah alamat unit terakhir list sebelum penghapusan  */
+/*      unit list berkurang satu (mungkin menjadi kosong) */
+/* Last unitt baru adalah predesesor unit pertama yg lama, */
 /* jika ada */
+
 void DelAfterUnit (ListUnit *L, addressUnit *Pdel, addressUnit Prec);
 /* I.S. List tidak kosong. Prec adalah anggota list  */
 /* F.S. Menghapus Next(Prec): */
-/*      Pdel adalah alamat elemen list yang dihapus  */
+/*      Pdel adalah alamat unit list yang dihapus  */
+
 void DelKoordinatUnit (ListUnit *L, POINT Koordinat, Unit *X);
 /* I.S. Sembarang */
-/* F.S. Jika ada elemen list beraddressUnit P, dengan Info(P)=X  */
+/* F.S. Jika ada unit list beraddressUnit P, dengan lokasi Koordinat  */
 /* Maka P dihapus dari list dan di-dealokasi */
-/* Jika tidak ada elemen list dengan Info(P)=X, maka list tetap */
+/* Jika tidak ada unit list dengan lokasi Koordinat, maka list tetap */
 /* List mungkin menjadi kosong karena penghapusan */
+
+/* OPERASI TRAVERSAL */
 void PrintListUnit(ListUnit L);
+/* Menuliskan ke layar daftar unit yang dimiliki L */
+
 Unit SearchNomor( ListUnit L, int nomor);
+/* Mengirimkan Unit yang memiliki indeks nomor */
+
 void ResetMovementPoint(ListUnit *L);
+/* Mereset movement point seluruh unit pada ListUnit L menjadi Max */
+
 boolean IsKingDead(ListUnit L);
+/* Mengirimkan nilai true jika Unit King
+   yang berada pada ListUnit L sudah tidak ada/mati */
+
 void ResetAttackChance(ListUnit *L);
+/* Mereset attack chance seluruh unit pada ListUnit L nenjadi true */
+
 #endif
