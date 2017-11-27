@@ -1,7 +1,7 @@
 #include "saveload.h"
 
 void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
-/* Menyimpan data game pada file "saved.txt" */
+/* Menyimpan data game pada file eksternal berisi teks*/
 	/* KAMUS LOKAL */
 	FILE *fsave;
 	char filename[100];
@@ -129,7 +129,7 @@ void Save(int M, int N, Player P1, Player P2, ListVil LVillages){
 }
 
 void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVillages){
-/* Meload data game yang sudah pernah tersimpa dari file "saved.txt" */
+/* Meload data game yang sudah pernah tersimpa dari file eksternal berisi teks */
 	/* KAMUS LOKAL */
 
 

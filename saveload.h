@@ -9,7 +9,7 @@ Player P1, P2;
 ListVil LVill;
 
 void Save(int M, int N, Player P1, Player P2, ListVil LVill);
-/* Menyimpan data game pada file "saved.txt" */
+/* Menyimpan data game pada file eksternal berisi teks*/
 
 void Load(int *M, int *N, Player *P1, Player *P2, ListVil *LVill);
-/* Meload data game yang sudah pernah tersimpa dari file "saved.txt" */
+/* Meload data game yang sudah pernah tersimpa dari file eksternal berisi teks */
