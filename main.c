@@ -34,7 +34,7 @@ PETA P;
 
 //Command: gcc -Wall main.c player.c matriks.c listofunit.c unit.c listvillage.c village.c pcolor.c point.c queue.c stackofplayer.c mesinkata.c mesinkar.c stackofpoint.c saveload.c interface.c -lm -o hasil
 
-void BFS(int MP, POINT P, PETA *Map);
+void BFS(int MP, POINT P, PETA *Map , Player PlayerSekarang);
 void PrintPlayerStatus(Player P,Unit U);
 void Attack(Unit* Now, Player* Enemy);
 void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit);
@@ -199,7 +199,11 @@ int main(){
 			scanf("%d",&nomor);
 			IndeksUnit = nomor+1;
 			Now = SearchNomor(UnitList(*CurrentPlayer),nomor);
+			clrscr();
+			UpdatePETA(&P,P1,P2,Villages,Now);
+			PrintPETA(P);
 			printf("Your current unit is %s\n",Jenis_Unit(Now));
+
 
 		}
 
@@ -596,16 +600,20 @@ void RekrutUnit(void){
 
 
 }
-	
-void BFS(int MP, POINT P, PETA *Map){
-	UP(*Map, P.X, P.Y) = '#';
+
+void BFS(int MP, POINT P, PETA *Map, Player PlayerSekarang){
+	int Warna = Warna(PlayerSekarang);
+	if (KUP(*Map, Absis(P), Ordinat(P)) == 0) {
+		UP(*Map, P.X, P.Y) = '#';
+	}
+
 	for(int i=0;i<4;i++){
 		int xx = (Absis(P)) + dx[i];
 		int yy = (Ordinat(P)) + dy[i];
 		POINT PP = MakePOINT(xx,yy);
 		if( xx >= 0 && xx < NBrsEff(*Map) && yy >= 0 && yy < NKolEff(*Map) && MP > 0 && Panjang(P,Lokasi_Unit(Now)) <= MoveP){
-			if(KUP(*Map, xx, yy) == 0){
-				BFS(MP-1, PP, Map);
+			if(KUP(*Map, xx, yy) == 0 || KUP(*Map, xx, yy)==Warna){
+				BFS(MP-1, PP, Map, PlayerSekarang);
 			}
 		}
 	}
@@ -616,8 +624,8 @@ void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit){
 	int Warna = Warna(PlayerSekarang);
 	int X,Y;
 	if(Movement_Point(*CurrentUnit) <= 0){
-	}	
-	// print peta dengan posisi dimana unit bisa berpindah	
+	}
+	// print peta dengan posisi dimana unit bisa berpindah
 	else{
 		MoveP = Movement_Point(*CurrentUnit);
 		for(int i=0;i<4;i++){
@@ -626,7 +634,7 @@ void Move(PETA M, Player PlayerSekarang, Unit* CurrentUnit){
 			POINT PP = MakePOINT(xx,yy);
 			if( xx >= 0 && xx < NBrsEff(M) && yy >= 0 && yy < NKolEff(M) && MoveP > 0 && Panjang(PP,Lokasi_Unit(Now)) <= MoveP){
 				if(KUP(M, xx, yy) == 0 || KUP(M, xx, yy)==Warna){
-					BFS(MoveP-1, PP, &M);
+					BFS(MoveP-1, PP, &M, PlayerSekarang);
 				}
 			}
 		}
